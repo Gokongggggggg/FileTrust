@@ -21,10 +21,15 @@ router.post('/', async (req, res) => {
   const targetUrl = parsed.href;
 
   try {
-    // Check quota
+    // Check quota — use authenticated user's email if available
     const ip = req.headers['x-forwarded-for']?.split(',')[0]?.trim() || req.ip;
-    const identifier = email?.toLowerCase().trim() || ip;
-    const quota = await canScan(identifier);
+    const identifier = req.user?.email?.toLowerCase() || email?.toLowerCase().trim() || ip;
+
+    // Tester accounts bypass quota
+    const isTester = req.user?.is_tester === true;
+    const quota = isTester
+      ? { allowed: true, reason: 'tester', remaining: -1, plan: 'unlimited' }
+      : await canScan(identifier);
 
     if (!quota.allowed) {
       return res.status(429).json({
@@ -35,8 +40,8 @@ router.post('/', async (req, res) => {
 
     const result = await checkURL(targetUrl);
 
-    // Record usage
-    await recordScan(identifier, 'url');
+    // Record usage (skip for testers)
+    if (!isTester) await recordScan(identifier, 'url');
     res.json({
       url: result.url,
       finalUrl: result.finalUrl,

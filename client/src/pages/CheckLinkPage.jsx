@@ -2,7 +2,7 @@ import { useState } from 'react'
 import Nav from '../Nav'
 import './CheckLinkPage.css'
 
-export default function CheckLinkPage() {
+export default function CheckLinkPage({ user, onLogout }) {
   const [url, setUrl] = useState('')
   const [state, setState] = useState('idle')
   const [result, setResult] = useState(null)
@@ -14,9 +14,12 @@ export default function CheckLinkPage() {
 
     setState('checking')
     try {
+      const fetchHeaders = { 'Content-Type': 'application/json' }
+      const token = localStorage.getItem('ft_token')
+      if (token) fetchHeaders['Authorization'] = `Bearer ${token}`
       const res = await fetch('/api/check-url', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: fetchHeaders,
         body: JSON.stringify({ url: trimmed }),
       })
       const data = await res.json()
@@ -36,7 +39,7 @@ export default function CheckLinkPage() {
   // ── CHECKING ──
   if (state === 'checking') return (
     <>
-      <Nav />
+      <Nav user={user} onLogout={onLogout} />
       <div className="cl-hero">
         <div className="hero-grid" />
         <div className="hero-orb hero-orb-1" />
@@ -69,7 +72,7 @@ export default function CheckLinkPage() {
 
     return (
       <>
-        <Nav />
+        <Nav user={user} onLogout={onLogout} />
         <div className={`cl-hero cl-hero--short ${isSafe ? 'cl-hero--safe' : 'cl-hero--danger'}`}>
           <div className="hero-grid" />
           <div className="hero-orb hero-orb-1" />
@@ -214,7 +217,7 @@ export default function CheckLinkPage() {
   // ── QUOTA EXCEEDED ──
   if (state === 'quota') return (
     <>
-      <Nav />
+      <Nav user={user} onLogout={onLogout} />
       <div className="cl-hero cl-hero--danger">
         <div className="hero-grid" />
         <div className="hero-orb hero-orb-1" />
@@ -248,7 +251,7 @@ export default function CheckLinkPage() {
   // ── IDLE ──
   return (
     <>
-      <Nav />
+      <Nav user={user} onLogout={onLogout} />
       <div className="cl-hero">
         <div className="hero-grid" />
         <div className="hero-orb hero-orb-1" />

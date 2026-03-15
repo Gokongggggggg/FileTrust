@@ -2,7 +2,7 @@ import { useState, useRef } from 'react'
 import Nav from '../Nav'
 import './ScanPage.css'
 
-export default function ScanPage() {
+export default function ScanPage({ user, onLogout }) {
   const [dragOver, setDragOver] = useState(false)
   const [state, setState] = useState('idle')
   const [result, setResult] = useState(null)
@@ -20,7 +20,10 @@ export default function ScanPage() {
     const form = new FormData()
     form.append('file', file)
     try {
-      const res = await fetch('/api/upload', { method: 'POST', body: form })
+      const headers = {}
+      const token = localStorage.getItem('ft_token')
+      if (token) headers['Authorization'] = `Bearer ${token}`
+      const res = await fetch('/api/upload', { method: 'POST', body: form, headers })
       const data = await res.json()
       if (res.status === 429) {
         setState('quota')
@@ -51,7 +54,7 @@ export default function ScanPage() {
   // ── SCANNING ──
   if (state === 'scanning') return (
     <>
-      <Nav />
+      <Nav user={user} onLogout={onLogout} />
       <div className="sp-hero">
         <div className="hero-grid" />
         <div className="hero-orb hero-orb-1" />
@@ -91,7 +94,7 @@ export default function ScanPage() {
 
     return (
       <>
-        <Nav />
+        <Nav user={user} onLogout={onLogout} />
         <div className={`sp-hero sp-hero--short ${heroClass}`}>
           <div className="hero-grid" />
           <div className="hero-orb hero-orb-1" />
@@ -279,7 +282,7 @@ export default function ScanPage() {
   // ── QUOTA EXCEEDED ──
   if (state === 'quota') return (
     <>
-      <Nav />
+      <Nav user={user} onLogout={onLogout} />
       <div className="sp-hero sp-hero--danger">
         <div className="hero-grid" />
         <div className="hero-orb hero-orb-1" />
@@ -313,7 +316,7 @@ export default function ScanPage() {
   // ── IDLE ──
   return (
     <>
-      <Nav />
+      <Nav user={user} onLogout={onLogout} />
       <div className="sp-hero">
         <div className="hero-grid" />
         <div className="hero-orb hero-orb-1" />

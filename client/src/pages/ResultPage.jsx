@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react'
 import Nav from '../Nav'
 import './ResultPage.css'
 
-export default function ResultPage({ code }) {
+export default function ResultPage({ code, user, onLogout }) {
   const [state, setState] = useState('loading')
   const [data, setData] = useState(null)
   const [copied, setCopied] = useState('')
@@ -26,7 +26,7 @@ export default function ResultPage({ code }) {
   // ── LOADING ──
   if (state === 'loading') return (
     <>
-      <Nav minimal />
+      <Nav minimal user={user} onLogout={onLogout} />
       <div className="rp-hero">
         <div className="hero-grid" />
         <div className="hero-orb hero-orb-1" />
@@ -48,7 +48,7 @@ export default function ResultPage({ code }) {
   // ── NOT FOUND ──
   if (state === 'notfound') return (
     <>
-      <Nav minimal />
+      <Nav minimal user={user} onLogout={onLogout} />
       <div className="rp-hero rp-hero--short">
         <div className="hero-grid" />
         <div className="hero-orb hero-orb-1" />
@@ -76,7 +76,7 @@ export default function ResultPage({ code }) {
 
   return (
     <>
-      <Nav minimal />
+      <Nav minimal user={user} onLogout={onLogout} />
 
       <div className={`rp-hero rp-hero--short ${isSafe ? 'rp-hero--safe' : 'rp-hero--danger'}`}>
         <div className="hero-grid" />

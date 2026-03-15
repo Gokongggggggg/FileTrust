@@ -42,7 +42,7 @@ const FAQS = [
   { q: 'Apa bedanya scan file vs cek link?', a: 'Scan File PDF memindai keseluruhan file — termasuk script tersembunyi, malware, dan link di dalam PDF — menggunakan 72 engine antivirus VirusTotal. Cek Link memverifikasi apakah sebuah URL aman menggunakan Google Safe Browsing, cocok untuk link yang kamu terima lewat chat atau email.' },
 ]
 
-export default function HomePage() {
+export default function HomePage({ user, onLogout }) {
   const [checkCode, setCheckCode] = useState('')
 
   function goCheck() {
@@ -52,7 +52,7 @@ export default function HomePage() {
 
   return (
     <>
-      <Nav />
+      <Nav user={user} onLogout={onLogout} />
 
       {/* ══ HERO ══ */}
       <div className="hero">

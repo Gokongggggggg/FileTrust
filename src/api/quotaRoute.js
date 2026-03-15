@@ -7,7 +7,7 @@ const router = express.Router();
  * GET /api/quota — get scan quota for current user (by IP or email)
  */
 router.get('/', async (req, res) => {
-  const email = req.query.email?.toLowerCase().trim();
+  const email = req.user?.email?.toLowerCase() || req.query.email?.toLowerCase().trim();
   const ip = req.headers['x-forwarded-for']?.split(',')[0]?.trim() || req.ip;
   const identifier = email || ip;
 

@@ -29,11 +29,16 @@ router.post('/', (req, res, next) => {
   if (!req.file) return res.status(400).json({ error: 'Tidak ada file yang diupload' });
 
   try {
-    // Check quota
+    // Check quota — use authenticated user's email if available
     const ip = req.headers['x-forwarded-for']?.split(',')[0]?.trim() || req.ip;
-    const email = req.body.email?.toLowerCase().trim();
+    const email = req.user?.email?.toLowerCase() || req.body.email?.toLowerCase().trim();
     const identifier = email || ip;
-    const quota = await canScan(identifier);
+
+    // Tester accounts bypass quota
+    const isTester = req.user?.is_tester === true;
+    const quota = isTester
+      ? { allowed: true, reason: 'tester', remaining: -1, plan: 'unlimited' }
+      : await canScan(identifier);
 
     if (!quota.allowed) {
       return res.status(429).json({
@@ -47,8 +52,8 @@ router.post('/', (req, res, next) => {
     console.log('[Upload] Scan complete, isSafe:', result.isSafe);
 
     // Only store file and generate code if file is safe
-    // Record scan usage
-    await recordScan(identifier, 'file');
+    // Record scan usage (skip for testers)
+    if (!isTester) await recordScan(identifier, 'file');
 
     if (result.isSafe) {
       const code = await storeFile(req.file.originalname, req.file.buffer, result);

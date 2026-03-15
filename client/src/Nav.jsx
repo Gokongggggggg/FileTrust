@@ -1,4 +1,8 @@
-export default function Nav({ minimal = false }) {
+import { useState } from 'react'
+
+export default function Nav({ minimal = false, user, onLogout }) {
+  const [menuOpen, setMenuOpen] = useState(false)
+
   return (
     <nav className="nav">
       <div className="nav-left">
@@ -39,6 +43,48 @@ export default function Nav({ minimal = false }) {
               Cek Link
             </a>
           </div>
+        )}
+
+        {/* Auth section */}
+        {user ? (
+          <div className="nav-user" onClick={() => setMenuOpen(!menuOpen)}>
+            {user.picture ? (
+              <img src={user.picture} alt="" className="nav-user-avatar" referrerPolicy="no-referrer" />
+            ) : (
+              <div className="nav-user-avatar nav-user-avatar--placeholder">
+                {user.name?.[0] || user.email?.[0] || '?'}
+              </div>
+            )}
+            <span className="nav-user-name">{user.name?.split(' ')[0]}</span>
+            {user.is_tester && <span className="nav-tester-badge">TESTER</span>}
+
+            {menuOpen && (
+              <div className="nav-dropdown">
+                <div className="nav-dropdown-header">
+                  <div className="nav-dropdown-name">{user.name}</div>
+                  <div className="nav-dropdown-email">{user.email}</div>
+                </div>
+                <div className="nav-dropdown-divider" />
+                <button className="nav-dropdown-item" onClick={(e) => { e.stopPropagation(); onLogout?.(); setMenuOpen(false) }}>
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
+                    <polyline points="16 17 21 12 16 7"/>
+                    <line x1="21" y1="12" x2="9" y2="12"/>
+                  </svg>
+                  Keluar
+                </button>
+              </div>
+            )}
+          </div>
+        ) : (
+          <a href="/login" className="nav-login-btn">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/>
+              <polyline points="10 17 15 12 10 7"/>
+              <line x1="15" y1="12" x2="3" y2="12"/>
+            </svg>
+            Masuk
+          </a>
         )}
       </div>
     </nav>

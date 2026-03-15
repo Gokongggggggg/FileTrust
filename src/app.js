@@ -8,12 +8,16 @@ const resultRouter = require('./api/result');
 const checkUrlRouter = require('./api/checkUrl');
 const paymentRouter = require('./api/payment');
 const quotaRouter = require('./api/quotaRoute');
+const authRouter = require('./api/auth');
+const { authMiddleware } = require('./api/auth');
 
 const app = express();
 app.use(express.json());
+app.use(authMiddleware);
 
 // API routes
 app.get('/health', (req, res) => res.json({ status: 'ok', service: 'FileTrust' }));
+app.use('/api/auth', authRouter);
 app.use('/api/upload', uploadRouter);
 app.use('/api/result', resultRouter);
 app.use('/api/check-url', checkUrlRouter);

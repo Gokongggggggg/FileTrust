@@ -13,13 +13,17 @@ function formatRupiah(n) {
   return 'Rp ' + n.toLocaleString('id-ID')
 }
 
-export default function PricingPage() {
+export default function PricingPage({ user, onLogout }) {
   const [email, setEmail] = useState('')
   const [loading, setLoading] = useState(null)
   const [quota, setQuota] = useState(null)
 
   useEffect(() => {
-    fetch('/api/quota').then(r => r.json()).then(setQuota).catch(() => {})
+    const headers = {}
+    const token = localStorage.getItem('ft_token')
+    if (token) headers['Authorization'] = `Bearer ${token}`
+    fetch('/api/quota', { headers }).then(r => r.json()).then(setQuota).catch(() => {})
+    if (user?.email) setEmail(user.email)
   }, [])
 
   async function handleBuy(planId) {
@@ -46,7 +50,7 @@ export default function PricingPage() {
 
   return (
     <>
-      <Nav />
+      <Nav user={user} onLogout={onLogout} />
       <div className="pr-hero">
         <div className="hero-grid" />
         <div className="hero-orb hero-orb-1" />

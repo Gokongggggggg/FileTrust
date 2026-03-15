@@ -63,6 +63,29 @@ async function initDB() {
         paid_at         TIMESTAMPTZ
       )
     `);
+    await client.query(`
+      CREATE TABLE IF NOT EXISTS users (
+        id          SERIAL PRIMARY KEY,
+        email       TEXT UNIQUE NOT NULL,
+        name        TEXT,
+        is_tester   BOOLEAN NOT NULL DEFAULT FALSE,
+        created_at  TIMESTAMPTZ DEFAULT NOW(),
+        last_login  TIMESTAMPTZ DEFAULT NOW()
+      )
+    `);
+
+    // Seed demo account (unlimited quota, no scan limits)
+    const demo = await client.query("SELECT id FROM users WHERE email = 'demo@filetrust.id'");
+    if (demo.rows.length === 0) {
+      await client.query(
+        `INSERT INTO users (email, name, is_tester) VALUES ('demo@filetrust.id', 'Demo Tester', TRUE) ON CONFLICT DO NOTHING`
+      );
+      await client.query(
+        `INSERT INTO scan_quota (identifier, credits, plan) VALUES ('demo@filetrust.id', 0, 'unlimited') ON CONFLICT DO NOTHING`
+      );
+      console.log('[DB] Demo account seeded: demo@filetrust.id (unlimited)');
+    }
+
     console.log('[DB] tables ready');
   } finally {
     client.release();
