@@ -65,4 +65,4 @@ async function setCachedResult(fileHash, result) {
   }
 }
 
-module.exports = { initDB, getCachedResult, setCachedResult };
+module.exports = { getPool, initDB, getCachedResult, setCachedResult };
