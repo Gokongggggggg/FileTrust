@@ -1,6 +1,6 @@
 const crypto = require('crypto');
 const { parsePDF } = require('./pdfParser');
-const { checkURL } = require('./urlChecker');
+const { checkURL, scanFileVirusTotal } = require('./urlChecker');
 const { getCachedResult, setCachedResult } = require('../db/cache');
 
 /**
@@ -27,15 +27,23 @@ async function scanPDF(fileBuffer, fileName) {
     return { ...cached, fromCache: true };
   }
 
-  // Parse PDF
-  const { urls, hasEmbeddedJS, jsDetails } = await parsePDF(fileBuffer);
+  // Run PDF parse + VirusTotal file scan in parallel
+  const [parseResult, vtFileScan] = await Promise.all([
+    parsePDF(fileBuffer),
+    scanFileVirusTotal(fileBuffer, fileName),
+  ]);
 
-  // Check all URLs in parallel (cap at 10 to avoid rate limits)
+  const { urls, hasEmbeddedJS, jsDetails } = parseResult;
+
+  // Check URLs found inside PDF (cap at 10 to avoid rate limits)
   const urlsToCheck = urls.slice(0, 10);
   const urlResults = await Promise.all(urlsToCheck.map(checkURL));
 
   const maliciousURLs = urlResults.filter(r => r.malicious);
-  const isSafe = !hasEmbeddedJS && maliciousURLs.length === 0;
+
+  // File is unsafe if: VT detects threats OR embedded JS found OR malicious URLs inside
+  const vtMalicious = vtFileScan?.malicious || false;
+  const isSafe = !vtMalicious && !hasEmbeddedJS && maliciousURLs.length === 0;
 
   const result = {
     fileName,
@@ -46,6 +54,13 @@ async function scanPDF(fileBuffer, fileName) {
     totalURLs: urls.length,
     checkedURLs: urlResults,
     maliciousURLs,
+    virusTotal: vtFileScan ? {
+      malicious: vtFileScan.malicious,
+      stats: vtFileScan.stats,
+      detections: vtFileScan.detections,
+      totalEngines: vtFileScan.totalEngines,
+      permalink: vtFileScan.permalink,
+    } : null,
     scannedAt: new Date().toISOString(),
     fromCache: false,
   };

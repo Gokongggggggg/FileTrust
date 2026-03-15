@@ -1,4 +1,5 @@
 const axios = require('axios');
+const FormData = require('form-data');
 
 const VT_API = 'https://www.virustotal.com/api/v3';
 const GSB_API = 'https://safebrowsing.googleapis.com/v4/threatMatches:find';
@@ -146,4 +147,85 @@ async function checkURL(url) {
   return { url, finalUrl, shortened, malicious, reason, vtData, gsbFlagged };
 }
 
-module.exports = { checkURL, unshortenURL, checkVirusTotal, checkGoogleSafeBrowsing };
+/**
+ * Scan a file buffer with VirusTotal API v3
+ * @param {Buffer} fileBuffer
+ * @param {string} fileName
+ * @returns {{ malicious: boolean, stats: object, detections: Array, totalEngines: number, permalink: string }}
+ */
+async function scanFileVirusTotal(fileBuffer, fileName) {
+  const apiKey = process.env.VIRUSTOTAL_API_KEY;
+  if (!apiKey) {
+    console.warn('[VT] VIRUSTOTAL_API_KEY not set, skipping file scan');
+    return null;
+  }
+
+  try {
+    // Upload file
+    const form = new FormData();
+    form.append('file', fileBuffer, { filename: fileName, contentType: 'application/pdf' });
+
+    console.log('[VT] Uploading file for scan:', fileName, 'size:', fileBuffer.length);
+    const submitRes = await axios.post(`${VT_API}/files`, form, {
+      headers: {
+        'x-apikey': apiKey,
+        ...form.getHeaders(),
+      },
+      maxContentLength: 32 * 1024 * 1024,
+      maxBodyLength: 32 * 1024 * 1024,
+      timeout: 30000,
+    });
+
+    const analysisId = submitRes.data?.data?.id;
+    if (!analysisId) {
+      console.warn('[VT] No analysis ID returned');
+      return null;
+    }
+
+    console.log('[VT] Analysis ID:', analysisId, '— polling for results...');
+
+    // Poll for result (max 12 tries, 5s apart — file scans take longer than URL scans)
+    for (let i = 0; i < 12; i++) {
+      await new Promise(r => setTimeout(r, 5000));
+      const result = await axios.get(`${VT_API}/analyses/${analysisId}`, {
+        headers: { 'x-apikey': apiKey },
+        timeout: 10000,
+      });
+
+      const status = result.data?.data?.attributes?.status;
+      console.log(`[VT] Poll ${i + 1}/12 — status: ${status}`);
+
+      if (status === 'completed') {
+        const stats = result.data?.data?.attributes?.stats || {};
+        const results = result.data?.data?.attributes?.results || {};
+
+        const detections = [];
+        for (const [engine, info] of Object.entries(results)) {
+          if (info.category === 'malicious' || info.category === 'suspicious') {
+            detections.push({ engine, category: info.category, result: info.result });
+          }
+        }
+
+        // Extract SHA-256 for permalink
+        const sha256 = result.data?.meta?.file_info?.sha256 ||
+                        submitRes.data?.data?.id?.split('-')?.[0] || '';
+
+        return {
+          malicious: (stats.malicious || 0) > 0 || (stats.suspicious || 0) > 0,
+          stats,
+          detections,
+          totalEngines: Object.keys(results).length,
+          permalink: sha256 ? `https://www.virustotal.com/gui/file/${sha256}` : null,
+        };
+      }
+    }
+
+    console.warn('[VT] File scan timed out after polling');
+    return null;
+  } catch (err) {
+    console.error('[VT] File scan error:', err.message);
+    return null;
+  }
+}
+
+module.exports = { checkURL, unshortenURL, checkVirusTotal, checkGoogleSafeBrowsing, scanFileVirusTotal };

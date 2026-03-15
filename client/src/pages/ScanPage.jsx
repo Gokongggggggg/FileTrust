@@ -70,6 +70,12 @@ export default function ScanPage() {
   // ── DONE ──
   if (state === 'done' && result) {
     const isSafe = result.isSafe
+    const vt = result.virusTotal
+    const vtStats = vt?.stats || {}
+    const vtDetections = vt?.detections || []
+    const totalEngines = vt?.totalEngines || 0
+    const maliciousCount = (vtStats.malicious || 0) + (vtStats.suspicious || 0)
+
     return (
       <>
         <Nav />
@@ -82,7 +88,14 @@ export default function ScanPage() {
               {isSafe ? '✅ File Aman' : '⚠️ File Mencurigakan'}
             </div>
             <h1>{isSafe ? 'File kamu aman!' : 'File ini mencurigakan'}</h1>
-            <p>{isSafe ? 'Bagikan kode di bawah ke penerima file.' : 'Jangan kirim file ini ke siapapun.'}</p>
+            <p>{isSafe
+              ? totalEngines > 0
+                ? `Tidak ada ancaman terdeteksi dari ${totalEngines} engine antivirus.`
+                : 'Bagikan kode di bawah ke penerima file.'
+              : totalEngines > 0
+                ? `${maliciousCount} dari ${totalEngines} engine mendeteksi ancaman.`
+                : 'Jangan kirim file ini ke siapapun.'
+            }</p>
           </div>
         </div>
         <div className="sp-wrap">
@@ -95,6 +108,63 @@ export default function ScanPage() {
                 <p><span className="file-badge">PDF</span> {result.fileName}</p>
               </div>
             </div>
+
+            {/* VT Score Badge */}
+            {totalEngines > 0 && (
+              <div className="cl-vt-score">
+                <div className={`cl-vt-score-circle ${maliciousCount > 0 ? 'danger' : 'safe'}`}>
+                  <span className="cl-vt-score-num">{maliciousCount}</span>
+                  <span className="cl-vt-score-sep">/</span>
+                  <span className="cl-vt-score-total">{totalEngines}</span>
+                </div>
+                <div className="cl-vt-score-label">
+                  {maliciousCount > 0
+                    ? `${maliciousCount} engine mendeteksi ancaman pada file ini`
+                    : 'Tidak ada engine yang mendeteksi ancaman'
+                  }
+                </div>
+              </div>
+            )}
+
+            {/* VT Stats Breakdown */}
+            {totalEngines > 0 && (
+              <div className="cl-vt-stats">
+                <div className="cl-vt-stat-item danger">
+                  <span className="cl-vt-stat-num">{vtStats.malicious || 0}</span>
+                  <span className="cl-vt-stat-label">Malicious</span>
+                </div>
+                <div className="cl-vt-stat-item warning">
+                  <span className="cl-vt-stat-num">{vtStats.suspicious || 0}</span>
+                  <span className="cl-vt-stat-label">Suspicious</span>
+                </div>
+                <div className="cl-vt-stat-item safe">
+                  <span className="cl-vt-stat-num">{vtStats.harmless || 0}</span>
+                  <span className="cl-vt-stat-label">Harmless</span>
+                </div>
+                <div className="cl-vt-stat-item neutral">
+                  <span className="cl-vt-stat-num">{vtStats.undetected || 0}</span>
+                  <span className="cl-vt-stat-label">Undetected</span>
+                </div>
+              </div>
+            )}
+
+            {/* Detection list if dangerous */}
+            {vtDetections.length > 0 && (
+              <div className="cl-detections">
+                <h3>Engine yang mendeteksi ancaman:</h3>
+                <div className="cl-detection-list">
+                  {vtDetections.map(d => (
+                    <div key={d.engine} className="cl-detection-item">
+                      <span className="cl-detection-engine">{d.engine}</span>
+                      <span className={`cl-detection-badge ${d.category}`}>
+                        {d.result || d.category}
+                      </span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
             <div className="result-details">
               <div className="detail-row">
                 <span className="detail-label">Status</span>
@@ -102,6 +172,17 @@ export default function ScanPage() {
                   {isSafe ? '✓ Aman untuk didownload' : '✗ Tidak aman — jangan download'}
                 </span>
               </div>
+              {totalEngines > 0 && (
+                <div className="detail-row">
+                  <span className="detail-label">VirusTotal</span>
+                  <span className={`detail-value ${maliciousCount > 0 ? 'status-danger' : 'status-safe'}`}>
+                    {maliciousCount > 0
+                      ? `✗ ${maliciousCount} dari ${totalEngines} engine mendeteksi ancaman`
+                      : `✓ ${totalEngines} engine — tidak ada ancaman`
+                    }
+                  </span>
+                </div>
+              )}
               <div className="detail-row">
                 <span className="detail-label">Script tersembunyi</span>
                 <span className={`detail-value ${result.hasEmbeddedJS ? 'status-danger' : 'status-safe'}`}>
@@ -109,10 +190,13 @@ export default function ScanPage() {
                 </span>
               </div>
               <div className="detail-row">
-                <span className="detail-label">Link diperiksa</span>
-                <span className="detail-value">{result.totalURLs} link ditemukan</span>
+                <span className="detail-label">Link di dalam PDF</span>
+                <span className="detail-value">
+                  {result.totalURLs} link ditemukan
+                  {result.maliciousURLs?.length > 0 && ` — ${result.maliciousURLs.length} berbahaya`}
+                </span>
               </div>
-              {!isSafe && result.maliciousURLs?.length > 0 && (
+              {result.maliciousURLs?.length > 0 && (
                 <div className="detail-row">
                   <span className="detail-label">Link berbahaya</span>
                   <div className="detail-value">
@@ -128,10 +212,16 @@ export default function ScanPage() {
                   {new Date(result.scannedAt).toLocaleString('id-ID', { dateStyle: 'long', timeStyle: 'short' })} WIB
                 </span>
               </div>
-              <div className="detail-row">
-                <span className="detail-label">Dipindai oleh</span>
-                <span className="detail-value">VirusTotal + Google Safe Browsing</span>
-              </div>
+              {vt?.permalink && (
+                <div className="detail-row">
+                  <span className="detail-label">Lihat di VirusTotal</span>
+                  <span className="detail-value">
+                    <a href={vt.permalink} target="_blank" rel="noopener noreferrer" className="cl-vt-link">
+                      Buka laporan lengkap →
+                    </a>
+                  </span>
+                </div>
+              )}
             </div>
             <div className="section-divider" />
             <div className="code-badge">
@@ -155,11 +245,6 @@ export default function ScanPage() {
             ) : (
               <div className="dl-disabled">Download dinonaktifkan untuk keamananmu</div>
             )}
-          </div>
-          <div className="trust-bar" style={{ marginTop: 20, padding: 0 }}>
-            <span className="trust-pill">🔍 VirusTotal</span>
-            <span className="trust-pill">🛡️ Safe Browsing</span>
-            <span className="trust-pill">🗑️ Auto-hapus 24 jam</span>
           </div>
         </div>
       </>
