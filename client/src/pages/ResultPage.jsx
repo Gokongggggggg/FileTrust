@@ -3,8 +3,14 @@ import { useState, useEffect } from 'react'
 function Nav() {
   return (
     <nav className="nav">
-      <a href="/" className="logo">File<em>Trust</em></a>
-      <span className="nav-badge">🔒 Powered by VirusTotal</span>
+      <a href="/" className="logo">
+        <svg className="logo-shield" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+          <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+          <path d="M9 12l2 2 4-4" stroke="#2563eb" />
+        </svg>
+        File<em>Trust</em>
+      </a>
+      <span className="nav-tag">Powered by VirusTotal</span>
     </nav>
   )
 }
@@ -51,8 +57,9 @@ export default function ResultPage({ code }) {
         <div className="result-page">
           <a href="/" className="back-link">← Kembali</a>
           <div className="error-card">
+            <div style={{ fontSize: 48, marginBottom: 16 }}>🔍</div>
             <h2>Kode tidak ditemukan</h2>
-            <p>Kode <strong>{code}</strong> sudah kedaluwarsa atau tidak valid.</p>
+            <p>Kode <strong style={{ fontFamily: 'JetBrains Mono, monospace' }}>{code}</strong> sudah kedaluwarsa atau tidak valid.</p>
             <a href="/" className="btn-primary">Scan File Baru</a>
           </div>
         </div>
@@ -65,10 +72,6 @@ export default function ResultPage({ code }) {
   const expiresDate = new Date(expiresAt).toLocaleString('id-ID', { dateStyle: 'long', timeStyle: 'short' })
   const scannedDate = new Date(r.scannedAt).toLocaleString('id-ID', { dateStyle: 'long', timeStyle: 'short' })
 
-  // VirusTotal stats from first checked URL (if any)
-  const vtResult = r.checkedURLs?.find(u => u.stats)
-  const vtMalicious = r.maliciousURLs?.reduce((acc, u) => acc + (u.stats?.malicious || 0), 0) ?? 0
-
   return (
     <>
       <Nav />
@@ -80,7 +83,7 @@ export default function ResultPage({ code }) {
             <div className="banner-icon">{isSafe ? '✅' : '⚠️'}</div>
             <div className="banner-text">
               <h1>{isSafe ? 'File Ini Aman' : 'File Ini Mencurigakan'}</h1>
-              <p>{fileName}</p>
+              <p><span className="file-badge">PDF</span> {fileName}</p>
             </div>
           </div>
 
@@ -99,7 +102,7 @@ export default function ResultPage({ code }) {
             </div>
             <div className="detail-row">
               <span className="detail-label">Link diperiksa</span>
-              <span className="detail-value">{r.totalURLs} link</span>
+              <span className="detail-value">{r.totalURLs} link ditemukan</span>
             </div>
             {!isSafe && r.maliciousURLs?.length > 0 && (
               <div className="detail-row">
@@ -112,32 +115,26 @@ export default function ResultPage({ code }) {
               </div>
             )}
             <div className="detail-row">
-              <span className="detail-label">Kode verifikasi</span>
-              <span className="detail-value" style={{ fontFamily: 'monospace', letterSpacing: 2, fontSize: 16 }}>
-                {code}
-              </span>
-            </div>
-            <div className="detail-row">
-              <span className="detail-label">Diperiksa pukul</span>
+              <span className="detail-label">Waktu scan</span>
               <span className="detail-value">{scannedDate} WIB</span>
             </div>
             <div className="detail-row">
               <span className="detail-label">Dipindai oleh</span>
-              <span className="detail-value">VirusTotal · Google Safe Browsing</span>
+              <span className="detail-value">VirusTotal + Google Safe Browsing</span>
             </div>
           </div>
 
           <div className="section-divider" />
 
           <div className="code-badge">
-            <div className="code-badge-label">Kode verifikasi</div>
+            <div className="code-badge-label">Kode Verifikasi</div>
             <div className="code-badge-value">{code}</div>
-            <div className="code-badge-sub">File dihapus otomatis pada {expiresDate}</div>
+            <div className="code-badge-sub">File akan dihapus otomatis pada {expiresDate}</div>
             <div className="copy-row">
-              <button className="copy-btn" onClick={() => copy(code, 'code')}>
+              <button className={`copy-btn ${copied === 'code' ? 'copied' : ''}`} onClick={() => copy(code, 'code')}>
                 {copied === 'code' ? '✓ Tersalin' : '📋 Salin kode'}
               </button>
-              <button className="copy-btn" onClick={() => copy(window.location.href, 'link')}>
+              <button className={`copy-btn ${copied === 'link' ? 'copied' : ''}`} onClick={() => copy(window.location.href, 'link')}>
                 {copied === 'link' ? '✓ Tersalin' : '🔗 Salin link'}
               </button>
             </div>
@@ -145,27 +142,28 @@ export default function ResultPage({ code }) {
 
           {isSafe ? (
             <a className="dl-btn" href={`/api/result/${code}/download`} download>
-              ⬇️ Download File — Aman
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+              Download File — Aman
             </a>
           ) : (
-            <div className="dl-disabled">❌ Download dinonaktifkan — file berbahaya</div>
-          )}
-
-          {!isSafe && (
-            <div style={{ textAlign: 'center', padding: '0 32px 24px', fontSize: 14, color: '#888' }}>
-              Tolak file ini dan laporkan pengirimnya.
-            </div>
+            <>
+              <div className="dl-disabled">Download dinonaktifkan — file berbahaya</div>
+              <div style={{ textAlign: 'center', padding: '0 32px 24px', fontSize: 13, color: 'var(--text-muted)' }}>
+                Tolak file ini dan laporkan pengirimnya.
+              </div>
+            </>
           )}
         </div>
 
-        <div className="trust-strip" style={{ marginTop: 20 }}>
-          <span className="trust-item">🔍 VirusTotal</span>
-          <span className="trust-item">🛡️ Google Safe Browsing</span>
-          <span className="trust-item">🔒 Immutable — tidak bisa diubah</span>
+        <div className="trust-row" style={{ marginTop: 16 }}>
+          <span className="trust-pill">🔍 VirusTotal</span>
+          <span className="trust-pill">🛡️ Google Safe Browsing</span>
+          <span className="trust-pill">🔒 Immutable</span>
         </div>
 
         <div className="result-footer">
-          Dipindai menggunakan VirusTotal & Google Safe Browsing · FileTrust
+          Dipindai menggunakan VirusTotal & Google Safe Browsing<br />
+          FileTrust — Verifikasi keamanan file untuk semua orang
         </div>
       </div>
     </>
