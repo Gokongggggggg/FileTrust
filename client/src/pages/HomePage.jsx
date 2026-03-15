@@ -18,75 +18,6 @@ function HeroParticles() {
   return <div className="particles" ref={ref} />
 }
 
-function Hero() {
-  return (
-    <div className="hero">
-      <div className="hero-grid" />
-      <div className="hero-orb hero-orb-1" />
-      <div className="hero-orb hero-orb-2" />
-      <div className="hero-orb hero-orb-3" />
-      <HeroParticles />
-
-      <div className="hero-cards">
-        <div className="hcard hcard-1">
-          <div className="hcard-icon green">✅</div>
-          <div className="hcard-label">
-            <strong>laporan_keuangan.pdf</strong>
-            <span>Aman · 0 ancaman ditemukan</span>
-          </div>
-        </div>
-        <div className="hcard hcard-2">
-          <div className="hcard-icon blue">🔍</div>
-          <div className="hcard-label">
-            <strong>72 engine antivirus</strong>
-            <span>VirusTotal · Memindai...</span>
-          </div>
-        </div>
-        <div className="hcard hcard-3">
-          <div className="hcard-icon red">⚠️</div>
-          <div className="hcard-label">
-            <strong>suspicious-link.com</strong>
-            <span>Phishing terdeteksi</span>
-          </div>
-        </div>
-        <div className="hcard hcard-4">
-          <div className="hcard-icon green">🔑</div>
-          <div className="hcard-label">
-            <strong>Kode: ABCD-1234</strong>
-            <span>Berlaku 24 jam</span>
-          </div>
-        </div>
-      </div>
-
-      <div className="hero-inner">
-        <div className="hero-badge">
-          <span className="hero-badge-dot" />
-          Platform keamanan file #1 di Indonesia
-        </div>
-        <h1>Verifikasi keamanan file,<br /><span>sebelum siapapun ragu.</span></h1>
-        <p>Scan PDF atau cek link mencurigakan menggunakan 72 engine antivirus — gratis, instan, tanpa daftar.</p>
-        <div className="hero-cta">
-          <a href="/scan" className="hero-btn-primary">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
-              <polyline points="14 2 14 8 20 8"/>
-              <path d="M9 15l2 2 4-4"/>
-            </svg>
-            Scan File PDF
-          </a>
-          <a href="/cek-link" className="hero-btn-secondary">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-              <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/>
-              <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/>
-            </svg>
-            Cek Link / URL
-          </a>
-        </div>
-      </div>
-    </div>
-  )
-}
-
 function FaqItem({ q, a }) {
   const [open, setOpen] = useState(false)
   return (
@@ -122,69 +53,94 @@ export default function HomePage() {
   return (
     <>
       <Nav />
-      <Hero />
 
-      {/* Tool Cards */}
-      <div className="tools-wrap">
-        <div className="tool-grid">
-          <a href="/scan" className="tool-card">
-            <div className="tool-icon-wrap blue">
-              <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+      {/* ══ HERO ══ */}
+      <div className="hero">
+        <div className="hero-grid" />
+        <div className="hero-orb hero-orb-1" />
+        <div className="hero-orb hero-orb-2" />
+        <div className="hero-orb hero-orb-3" />
+        <HeroParticles />
+
+        <div className="hero-cards">
+          <div className="hcard hcard-1">
+            <div className="hcard-icon green">✅</div>
+            <div className="hcard-label">
+              <strong>laporan_keuangan.pdf</strong>
+              <span>Aman · 0 ancaman ditemukan</span>
+            </div>
+          </div>
+          <div className="hcard hcard-2">
+            <div className="hcard-icon blue">🔍</div>
+            <div className="hcard-label">
+              <strong>72 engine antivirus</strong>
+              <span>VirusTotal · Memindai...</span>
+            </div>
+          </div>
+          <div className="hcard hcard-3">
+            <div className="hcard-icon red">⚠️</div>
+            <div className="hcard-label">
+              <strong>suspicious-link.com</strong>
+              <span>Phishing terdeteksi</span>
+            </div>
+          </div>
+          <div className="hcard hcard-4">
+            <div className="hcard-icon green">🔑</div>
+            <div className="hcard-label">
+              <strong>Kode: ABCD-1234</strong>
+              <span>Berlaku 24 jam</span>
+            </div>
+          </div>
+        </div>
+
+        <div className="hero-inner">
+          <div className="hero-badge">
+            <span className="hero-badge-dot" />
+            Platform keamanan file #1 di Indonesia
+          </div>
+          <h1>Verifikasi keamanan file,<br /><span>sebelum siapapun ragu.</span></h1>
+          <p>Scan PDF atau cek link mencurigakan menggunakan 72 engine antivirus — gratis, instan, tanpa daftar.</p>
+          <div className="hero-cta">
+            <a href="/scan" className="hero-btn-primary">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
                 <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
                 <polyline points="14 2 14 8 20 8"/>
                 <path d="M9 15l2 2 4-4"/>
               </svg>
-            </div>
-            <h3>Scan File PDF</h3>
-            <p>Upload PDF kamu, kami pindai dengan 72 engine antivirus dan berikan kode verifikasi unik yang bisa kamu share ke penerima.</p>
-            <span className="tool-cta">Mulai scan
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-            </span>
-          </a>
-          <a href="/cek-link" className="tool-card">
-            <div className="tool-icon-wrap teal">
-              <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+              Scan File PDF
+            </a>
+            <a href="/cek-link" className="hero-btn-secondary">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
                 <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/>
                 <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/>
               </svg>
-            </div>
-            <h3>Cek Link / URL</h3>
-            <p>Tempel URL yang mencurigakan, kami cek apakah aman menggunakan VirusTotal dan Google Safe Browsing secara real-time.</p>
-            <span className="tool-cta">Cek sekarang
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-            </span>
-          </a>
-        </div>
-
-        {/* Code Check */}
-        <div className="code-check-card">
-          <div className="code-check-icon">
-            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
-              <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
-              <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
-            </svg>
+              Cek Link / URL
+            </a>
           </div>
-          <h3>Punya Kode Verifikasi?</h3>
-          <p>Masukkan kode 8 karakter dari pengirim file untuk lihat hasil scan dan download dengan aman.</p>
-          <div className="code-check-form">
-            <input
-              type="text"
-              className="code-check-input"
-              placeholder="XXXX-XXXX"
-              value={checkCode}
-              onChange={e => setCheckCode(e.target.value.toUpperCase())}
-              onKeyDown={e => e.key === 'Enter' && goCheck()}
-              maxLength={9}
-            />
-            <button className="code-check-btn" onClick={goCheck} disabled={!checkCode.trim()}>
-              Cek Hasil
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-            </button>
+
+          {/* Code check inline */}
+          <div className="hero-code-check">
+            <span className="hero-code-label">Punya kode verifikasi?</span>
+            <div className="hero-code-form">
+              <input
+                type="text"
+                className="hero-code-input"
+                placeholder="XXXX-XXXX"
+                value={checkCode}
+                onChange={e => setCheckCode(e.target.value.toUpperCase())}
+                onKeyDown={e => e.key === 'Enter' && goCheck()}
+                maxLength={9}
+              />
+              <button className="hero-code-btn" onClick={goCheck} disabled={!checkCode.trim()}>
+                Cek
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+              </button>
+            </div>
           </div>
         </div>
       </div>
 
-      {/* Trust Bar */}
+      {/* ══ TRUST BAR ══ */}
       <div className="trust-bar">
         <span className="trust-pill">🔍 VirusTotal</span>
         <span className="trust-pill">🛡️ Google Safe Browsing</span>
@@ -193,29 +149,69 @@ export default function HomePage() {
         <span className="trust-pill">🔒 Tanpa daftar</span>
       </div>
 
-      {/* Stats */}
-      <div className="stats-bar">
-        <div className="stats-inner">
-          <div className="stat-item">
-            <div className="stat-value"><span className="stat-accent">72</span></div>
-            <div className="stat-label">Engine Antivirus</div>
+      {/* ══ PROBLEM STATEMENT ══ */}
+      <div className="problem-section">
+        <div className="problem-grid">
+          <div className="problem-text">
+            <span className="section-tag">Masalahnya</span>
+            <h2>File digital bisa membawa ancaman tersembunyi.</h2>
+            <p>
+              Setiap hari, jutaan file PDF beredar lewat WhatsApp, email, dan chat.
+              Di balik dokumen yang tampak biasa, bisa tersembunyi <strong>malware</strong>, <strong>phishing link</strong>, atau <strong>script berbahaya</strong> yang mencuri data pribadimu.
+            </p>
+            <p>
+              Masalahnya? Kamu tidak bisa tahu hanya dengan membuka file-nya.
+              Dan sekali dibuka, sudah terlambat.
+            </p>
           </div>
-          <div className="stat-item">
-            <div className="stat-value">24<span className="stat-accent">jam</span></div>
-            <div className="stat-label">Auto Hapus</div>
-          </div>
-          <div className="stat-item">
-            <div className="stat-value"><span className="stat-accent">0</span></div>
-            <div className="stat-label">Data Disimpan</div>
-          </div>
-          <div className="stat-item">
-            <div className="stat-value">100<span className="stat-accent">%</span></div>
-            <div className="stat-label">Gratis</div>
+          <div className="problem-stats">
+            <div className="problem-stat">
+              <div className="problem-stat-value">3.4<span>miliar</span></div>
+              <div className="problem-stat-label">Email phishing dikirim setiap hari secara global</div>
+            </div>
+            <div className="problem-stat">
+              <div className="problem-stat-value">92<span>%</span></div>
+              <div className="problem-stat-label">Malware dikirim melalui file attachment</div>
+            </div>
+            <div className="problem-stat">
+              <div className="problem-stat-value">1 dari 4</div>
+              <div className="problem-stat-label">PDF yang beredar mengandung link mencurigakan</div>
+            </div>
           </div>
         </div>
       </div>
 
-      {/* How It Works */}
+      {/* ══ SOLUTION ══ */}
+      <div className="solution-section">
+        <div className="solution-inner">
+          <span className="section-tag">Solusinya</span>
+          <h2>FileTrust hadir untuk menghilangkan keraguan.</h2>
+          <p>
+            Kami membangun FileTrust agar siapapun — seller online, karyawan kantor, mahasiswa — bisa
+            memverifikasi keamanan file <strong>sebelum</strong> mengirim atau membukanya.
+            Cukup upload, scan, dan bagikan kode verifikasi ke penerima.
+          </p>
+          <div className="solution-cards">
+            <div className="solution-card">
+              <div className="solution-card-icon">📤</div>
+              <h4>Untuk pengirim</h4>
+              <p>Upload PDF, dapatkan hasil scan dan kode unik. Kirim kode ke penerima sebagai bukti file-mu aman.</p>
+            </div>
+            <div className="solution-card">
+              <div className="solution-card-icon">📥</div>
+              <h4>Untuk penerima</h4>
+              <p>Masukkan kode verifikasi, lihat detail scan, dan download file yang sudah diverifikasi aman.</p>
+            </div>
+            <div className="solution-card">
+              <div className="solution-card-icon">🔗</div>
+              <h4>Cek link mencurigakan</h4>
+              <p>Dapat link aneh dari chat? Tempel di sini, kami cek pakai VirusTotal dan Google Safe Browsing.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* ══ HOW IT WORKS ══ */}
       <div className="how-section" id="cara-kerja">
         <div style={{ textAlign: 'center' }}>
           <span className="section-tag">Cara Kerja</span>
@@ -250,7 +246,29 @@ export default function HomePage() {
         </div>
       </div>
 
-      {/* Features */}
+      {/* ══ STATS ══ */}
+      <div className="stats-bar">
+        <div className="stats-inner">
+          <div className="stat-item">
+            <div className="stat-value"><span className="stat-accent">72</span></div>
+            <div className="stat-label">Engine Antivirus</div>
+          </div>
+          <div className="stat-item">
+            <div className="stat-value">24<span className="stat-accent">jam</span></div>
+            <div className="stat-label">Auto Hapus</div>
+          </div>
+          <div className="stat-item">
+            <div className="stat-value"><span className="stat-accent">0</span></div>
+            <div className="stat-label">Data Disimpan</div>
+          </div>
+          <div className="stat-item">
+            <div className="stat-value">100<span className="stat-accent">%</span></div>
+            <div className="stat-label">Gratis</div>
+          </div>
+        </div>
+      </div>
+
+      {/* ══ FEATURES ══ */}
       <div className="features-section" id="kenapa">
         <div style={{ textAlign: 'center' }}>
           <span className="section-tag">Keunggulan</span>
@@ -275,7 +293,7 @@ export default function HomePage() {
         </div>
       </div>
 
-      {/* FAQ */}
+      {/* ══ FAQ ══ */}
       <div className="faq-section" id="faq">
         <div style={{ textAlign: 'center' }}>
           <span className="section-tag">FAQ</span>
@@ -287,7 +305,7 @@ export default function HomePage() {
         </div>
       </div>
 
-      {/* CTA Banner */}
+      {/* ══ CTA ══ */}
       <div className="cta-section">
         <div className="cta-banner">
           <h2>Siap verifikasi file kamu?</h2>

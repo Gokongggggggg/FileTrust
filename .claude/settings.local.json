@@ -2,7 +2,11 @@
   "permissions": {
     "allow": [
       "Bash(cd:*)",
-      "Bash(ls:*)"
+      "Bash(ls:*)",
+      "Bash(node:*)",
+      "Bash(sleep:*)",
+      "Bash(taskkill:*)",
+      "Bash(rm:*)"
     ]
   }
 }
