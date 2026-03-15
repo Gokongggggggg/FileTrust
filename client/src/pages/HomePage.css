@@ -898,6 +898,38 @@
 .feature-card h4 { font-size: 15px; font-weight: 700; color: var(--slate-800); margin-bottom: 6px; }
 .feature-card p  { font-size: 13px; color: var(--slate-500); line-height: 1.6; }
 
+.feature-card--highlight {
+  grid-column: span 3;
+  display: grid;
+  grid-template-columns: auto 1fr;
+  grid-template-rows: auto auto;
+  column-gap: 20px;
+  row-gap: 4px;
+  text-align: left;
+  background: linear-gradient(135deg, #eff6ff 0%, #f0fdf4 100%);
+  border-color: var(--blue-200);
+  padding: 32px 30px;
+}
+
+.feature-card--highlight .feature-icon {
+  grid-row: span 2;
+  width: 56px; height: 56px;
+  font-size: 26px;
+  background: linear-gradient(135deg, var(--blue-600), var(--green-500));
+  border-radius: 16px;
+  align-self: center;
+}
+
+.feature-card--highlight h4 {
+  font-size: 17px;
+  align-self: end;
+}
+
+.feature-card--highlight p {
+  font-size: 14px;
+  align-self: start;
+}
+
 /* ═══════════════════════════════════════════
    FAQ
    ═══════════════════════════════════════════ */
@@ -1148,6 +1180,7 @@
   .problem-section, .solution-section { padding: 0 16px; }
   .tool-grid { grid-template-columns: 1fr; }
   .feature-grid { grid-template-columns: 1fr 1fr; }
+  .feature-card--highlight { grid-column: span 2; }
   .steps { grid-template-columns: 1fr 1fr; }
   .code-check-form { flex-direction: column; }
   .code-check-card { padding: 32px 20px; }
@@ -1171,6 +1204,7 @@
 @media (max-width: 480px) {
   .hero-inner h1 { font-size: 26px; }
   .feature-grid { grid-template-columns: 1fr; }
+  .feature-card--highlight { grid-column: span 1; }
   .steps { grid-template-columns: 1fr; }
   .stat-value { font-size: 22px; }
   .footer-links { flex-direction: column; gap: 24px; }

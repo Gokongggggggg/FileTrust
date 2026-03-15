@@ -304,14 +304,14 @@ export default function HomePage() {
         <div className="section-sub">Satu platform untuk buktikan file kamu benar-benar aman.</div>
         <div className="feature-grid">
           {[
-            { icon: '🔐', title: 'Anti manipulasi', desc: 'File yang didownload adalah persis file yang sudah dipindai. Tidak bisa di-swap oleh siapapun.' },
-            { icon: '⚡', title: 'Hasil instan', desc: 'Scan selesai dalam hitungan detik. Kamu langsung tahu apakah file aman atau berbahaya.' },
+            { icon: '🔗', title: 'Share via kode verifikasi', desc: 'Pengirim upload file, dapat kode unik 8 karakter. Penerima masukkan kode untuk lihat hasil scan dan download — tanpa perlu kirim file lewat chat yang bisa dipalsukan.', highlight: true },
+            { icon: '🛡️', title: 'Download langsung dari FileTrust', desc: 'Penerima download file langsung dari web FileTrust — bukan dari chat atau email. File yang didownload dijamin persis file yang sudah lolos scan. Tidak bisa ditukar atau dimanipulasi.', highlight: true },
+            { icon: '🚫', title: 'File berbahaya tidak bisa dibagikan', desc: 'Kalau file terdeteksi malware atau phishing, file TIDAK disimpan dan TIDAK mendapat kode. Hanya file yang lolos 72 engine antivirus yang bisa dibagikan.' },
             { icon: '🦠', title: 'Deteksi malware', desc: 'Mendeteksi trojan, ransomware, spyware, dan jenis malware lainnya yang tersembunyi di dalam file PDF.' },
             { icon: '🎣', title: 'Anti-phishing', desc: 'Semua URL di dalam PDF dicek — link login palsu, redirect berbahaya, dan situs penipuan langsung terdeteksi.' },
-            { icon: '🔗', title: 'Share via kode', desc: 'Cukup kirim kode 8 karakter ke penerima. Mereka bisa verifikasi dan download langsung.' },
             { icon: '📊', title: 'Laporan detail', desc: 'Lihat engine mana yang mendeteksi ancaman, jenis ancaman apa, dan skor keamanan keseluruhan file.' },
           ].map(f => (
-            <div key={f.title} className="feature-card">
+            <div key={f.title} className={`feature-card ${f.highlight ? 'feature-card--highlight' : ''}`}>
               <div className="feature-icon">{f.icon}</div>
               <h4>{f.title}</h4>
               <p>{f.desc}</p>
