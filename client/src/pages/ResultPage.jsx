@@ -1,24 +1,6 @@
 import { useState, useEffect } from 'react'
-
-function Nav() {
-  return (
-    <nav className="nav">
-      <div className="nav-left">
-        <a href="/" className="logo">
-          <span className="logo-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
-            </svg>
-          </span>
-          File<em>Trust</em>
-        </a>
-      </div>
-      <div className="nav-right">
-        <span className="nav-badge">Powered by VirusTotal</span>
-      </div>
-    </nav>
-  )
-}
+import Nav from '../Nav'
+import './ResultPage.css'
 
 export default function ResultPage({ code }) {
   const [state, setState] = useState('loading')
@@ -41,37 +23,52 @@ export default function ResultPage({ code }) {
     setTimeout(() => setCopied(''), 2000)
   }
 
-  if (state === 'loading') {
-    return (
-      <>
-        <Nav />
-        <div className="result-page">
-          <div className="scanning-screen">
-            <div className="spinner" />
-            <h2>Memuat hasil scan...</h2>
-          </div>
+  // ── LOADING ──
+  if (state === 'loading') return (
+    <>
+      <Nav minimal />
+      <div className="rp-hero">
+        <div className="hero-grid" />
+        <div className="hero-orb hero-orb-1" />
+        <div className="hero-orb hero-orb-2" />
+        <div className="hero-inner">
+          <h1>Memuat hasil scan...</h1>
         </div>
-      </>
-    )
-  }
-
-  if (state === 'notfound') {
-    return (
-      <>
-        <Nav />
-        <div className="result-page">
-          <a href="/" className="back-link">← Kembali</a>
-          <div className="error-card">
-            <div style={{ fontSize: 48, marginBottom: 16 }}>🔍</div>
-            <h2>Kode tidak ditemukan</h2>
-            <p>Kode <strong style={{ fontFamily: 'JetBrains Mono, monospace' }}>{code}</strong> sudah kedaluwarsa atau tidak valid.</p>
-            <a href="/" className="btn-primary">Scan File Baru</a>
-          </div>
+      </div>
+      <div className="rp-wrap">
+        <div className="scanning-screen">
+          <div className="spinner" />
+          <h2>Mengambil data hasil scan</h2>
+          <p>Sebentar ya...</p>
         </div>
-      </>
-    )
-  }
+      </div>
+    </>
+  )
 
+  // ── NOT FOUND ──
+  if (state === 'notfound') return (
+    <>
+      <Nav minimal />
+      <div className="rp-hero rp-hero--short">
+        <div className="hero-grid" />
+        <div className="hero-orb hero-orb-1" />
+        <div className="hero-inner">
+          <h1>Kode tidak ditemukan</h1>
+          <p>Kode sudah kedaluwarsa atau tidak valid.</p>
+        </div>
+      </div>
+      <div className="rp-wrap">
+        <div className="error-card">
+          <div className="error-icon">🔍</div>
+          <h2>Kode <span className="code-inline">{code}</span> tidak valid</h2>
+          <p>Kode verifikasi berlaku selama 24 jam sejak file diupload. Minta pengirim untuk upload ulang file-nya.</p>
+          <a href="/" className="btn-primary">← Kembali ke Beranda</a>
+        </div>
+      </div>
+    </>
+  )
+
+  // ── DONE ──
   const { scanResult: r, fileName, expiresAt } = data
   const isSafe = r.isSafe
   const expiresDate = new Date(expiresAt).toLocaleString('id-ID', { dateStyle: 'long', timeStyle: 'short' })
@@ -79,11 +76,30 @@ export default function ResultPage({ code }) {
 
   return (
     <>
-      <Nav />
-      <div className="result-page">
+      <Nav minimal />
+
+      <div className={`rp-hero rp-hero--short ${isSafe ? 'rp-hero--safe' : 'rp-hero--danger'}`}>
+        <div className="hero-grid" />
+        <div className="hero-orb hero-orb-1" />
+        <div className="hero-orb hero-orb-2" />
+        <div className="hero-inner">
+          <div className="rp-status-badge">
+            {isSafe ? '✅ File Aman' : '⚠️ File Mencurigakan'}
+          </div>
+          <h1>{fileName}</h1>
+          <p>{isSafe
+            ? 'File ini sudah diverifikasi aman. Kamu bisa download dengan tenang.'
+            : 'File ini terindikasi berbahaya. Jangan download atau buka file ini.'
+          }</p>
+        </div>
+      </div>
+
+      <div className="rp-wrap">
         <a href="/" className="back-link">← Scan file lain</a>
 
         <div className="result-card">
+
+          {/* Banner */}
           <div className={`result-banner ${isSafe ? 'safe' : 'danger'}`}>
             <div className="banner-icon">{isSafe ? '✅' : '⚠️'}</div>
             <div className="banner-text">
@@ -92,6 +108,7 @@ export default function ResultPage({ code }) {
             </div>
           </div>
 
+          {/* Detail rows */}
           <div className="result-details">
             <div className="detail-row">
               <span className="detail-label">Status</span>
@@ -131,6 +148,7 @@ export default function ResultPage({ code }) {
 
           <div className="section-divider" />
 
+          {/* Code badge */}
           <div className="code-badge">
             <div className="code-badge-label">Kode Verifikasi</div>
             <div className="code-badge-value">{code}</div>
@@ -145,21 +163,25 @@ export default function ResultPage({ code }) {
             </div>
           </div>
 
+          {/* Download */}
           {isSafe ? (
             <a className="dl-btn" href={`/api/result/${code}/download`} download>
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                <polyline points="7 10 12 15 17 10"/>
+                <line x1="12" y1="15" x2="12" y2="3"/>
+              </svg>
               Download File — Aman
             </a>
           ) : (
             <>
               <div className="dl-disabled">Download dinonaktifkan — file berbahaya</div>
-              <div style={{ textAlign: 'center', padding: '0 32px 24px', fontSize: 13, color: 'var(--slate-400)' }}>
-                Tolak file ini dan laporkan pengirimnya.
-              </div>
+              <p className="dl-warn">Tolak file ini dan laporkan pengirimnya.</p>
             </>
           )}
         </div>
 
+        {/* Trust bar */}
         <div className="trust-bar" style={{ marginTop: 16, padding: 0, maxWidth: 'none' }}>
           <span className="trust-pill">🔍 VirusTotal</span>
           <span className="trust-pill">🛡️ Google Safe Browsing</span>
@@ -167,7 +189,7 @@ export default function ResultPage({ code }) {
         </div>
 
         <div className="result-footer">
-          Dipindai menggunakan VirusTotal & Google Safe Browsing<br />
+          Dipindai menggunakan VirusTotal &amp; Google Safe Browsing<br />
           FileTrust — Verifikasi keamanan file untuk semua orang
         </div>
       </div>
