@@ -3,14 +3,19 @@ import { useState, useEffect } from 'react'
 function Nav() {
   return (
     <nav className="nav">
-      <a href="/" className="logo">
-        <svg className="logo-shield" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-          <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
-          <path d="M9 12l2 2 4-4" stroke="#2563eb" />
-        </svg>
-        File<em>Trust</em>
-      </a>
-      <span className="nav-tag">Powered by VirusTotal</span>
+      <div className="nav-left">
+        <a href="/" className="logo">
+          <span className="logo-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+            </svg>
+          </span>
+          File<em>Trust</em>
+        </a>
+      </div>
+      <div className="nav-right">
+        <span className="nav-badge">Powered by VirusTotal</span>
+      </div>
     </nav>
   )
 }
@@ -148,14 +153,14 @@ export default function ResultPage({ code }) {
           ) : (
             <>
               <div className="dl-disabled">Download dinonaktifkan — file berbahaya</div>
-              <div style={{ textAlign: 'center', padding: '0 32px 24px', fontSize: 13, color: 'var(--text-muted)' }}>
+              <div style={{ textAlign: 'center', padding: '0 32px 24px', fontSize: 13, color: 'var(--slate-400)' }}>
                 Tolak file ini dan laporkan pengirimnya.
               </div>
             </>
           )}
         </div>
 
-        <div className="trust-row" style={{ marginTop: 16 }}>
+        <div className="trust-bar" style={{ marginTop: 16, padding: 0, maxWidth: 'none' }}>
           <span className="trust-pill">🔍 VirusTotal</span>
           <span className="trust-pill">🛡️ Google Safe Browsing</span>
           <span className="trust-pill">🔒 Immutable</span>
