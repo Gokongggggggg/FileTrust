@@ -31,9 +31,16 @@ router.post('/', (req, res, next) => {
     console.log('[Upload] Scanning file:', req.file.originalname, 'size:', req.file.size);
     const result = await scanPDF(req.file.buffer, req.file.originalname);
     console.log('[Upload] Scan complete, isSafe:', result.isSafe);
-    const code = await storeFile(req.file.originalname, req.file.buffer, result);
-    console.log('[Upload] Stored with code:', code);
-    res.json({ code, result });
+
+    // Only store file and generate code if file is safe
+    if (result.isSafe) {
+      const code = await storeFile(req.file.originalname, req.file.buffer, result);
+      console.log('[Upload] Stored with code:', code);
+      res.json({ code, result });
+    } else {
+      console.log('[Upload] File not safe — not storing');
+      res.json({ code: null, result });
+    }
   } catch (err) {
     console.error('[Upload] Error:', err.message, err.stack);
     res.status(500).json({ error: 'Gagal memproses file. Coba lagi.' });

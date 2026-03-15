@@ -237,27 +237,34 @@ export default function ScanPage() {
                 </div>
               )}
             </div>
-            <div className="section-divider" />
-            <div className="code-badge">
-              <div className="code-badge-label">Kode Verifikasi</div>
-              <div className="code-badge-value">{code}</div>
-              <div className="code-badge-sub">Berlaku 24 jam — kirim kode ini ke penerima file</div>
-              <div className="copy-row">
-                <button className={`copy-btn ${copied === 'code' ? 'copied' : ''}`} onClick={() => copy(code, 'code')}>
-                  {copied === 'code' ? '✓ Tersalin' : '📋 Salin kode'}
-                </button>
-                <button className={`copy-btn ${copied === 'link' ? 'copied' : ''}`} onClick={() => copy(`${window.location.origin}/result/${code}`, 'link')}>
-                  {copied === 'link' ? '✓ Tersalin' : '🔗 Salin link'}
-                </button>
-              </div>
-            </div>
-            {isSafe ? (
-              <a className="dl-btn" href={`/api/result/${code}/download`} download>
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-                Download File
-              </a>
+            {code ? (
+              <>
+                <div className="section-divider" />
+                <div className="code-badge">
+                  <div className="code-badge-label">Kode Verifikasi</div>
+                  <div className="code-badge-value">{code}</div>
+                  <div className="code-badge-sub">Berlaku 24 jam — kirim kode ini ke penerima file</div>
+                  <div className="copy-row">
+                    <button className={`copy-btn ${copied === 'code' ? 'copied' : ''}`} onClick={() => copy(code, 'code')}>
+                      {copied === 'code' ? '✓ Tersalin' : '📋 Salin kode'}
+                    </button>
+                    <button className={`copy-btn ${copied === 'link' ? 'copied' : ''}`} onClick={() => copy(`${window.location.origin}/result/${code}`, 'link')}>
+                      {copied === 'link' ? '✓ Tersalin' : '🔗 Salin link'}
+                    </button>
+                  </div>
+                </div>
+                <a className="dl-btn" href={`/api/result/${code}/download`} download>
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                  Download File
+                </a>
+              </>
             ) : (
-              <div className="dl-disabled">Download dinonaktifkan untuk keamananmu</div>
+              <>
+                <div className="section-divider" />
+                <div className="dl-disabled">
+                  File tidak disimpan dan tidak bisa dibagikan karena terdeteksi tidak aman.
+                </div>
+              </>
             )}
           </div>
         </div>
