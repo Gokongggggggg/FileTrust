@@ -98,6 +98,7 @@ body {
   gap: 10px;
 }
 
+.logo-text { display: inline; }
 .logo em { font-style: normal; color: var(--blue-400); }
 
 .logo-icon {
