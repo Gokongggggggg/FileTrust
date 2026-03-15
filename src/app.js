@@ -6,6 +6,8 @@ const { cleanExpired } = require('./db/fileStore');
 const uploadRouter = require('./api/upload');
 const resultRouter = require('./api/result');
 const checkUrlRouter = require('./api/checkUrl');
+const paymentRouter = require('./api/payment');
+const quotaRouter = require('./api/quotaRoute');
 
 const app = express();
 app.use(express.json());
@@ -15,6 +17,9 @@ app.get('/health', (req, res) => res.json({ status: 'ok', service: 'FileTrust' }
 app.use('/api/upload', uploadRouter);
 app.use('/api/result', resultRouter);
 app.use('/api/check-url', checkUrlRouter);
+app.use('/api/payment', paymentRouter);
+app.use('/api/webhook/mayar', paymentRouter);
+app.use('/api/quota', quotaRouter);
 
 // Serve React frontend
 app.use(express.static(path.join(__dirname, '../client/dist')));

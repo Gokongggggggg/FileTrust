@@ -10,7 +10,10 @@
       "Bash(npm run:*)",
       "WebFetch(domain:docs.mayar.id)",
       "WebSearch",
-      "Bash(git add:*)"
+      "Bash(git add:*)",
+      "WebFetch(domain:mayar.id)",
+      "WebFetch(domain:raw.githubusercontent.com)",
+      "WebFetch(domain:mayar.mintlify.app)"
     ]
   }
 }

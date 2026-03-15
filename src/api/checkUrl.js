@@ -1,10 +1,11 @@
 const express = require('express');
 const { checkURL } = require('../scanner/urlChecker');
+const { canScan, recordScan } = require('../db/quota');
 
 const router = express.Router();
 
 router.post('/', async (req, res) => {
-  const { url } = req.body;
+  const { url, email } = req.body;
   if (!url || typeof url !== 'string') {
     return res.status(400).json({ error: 'URL tidak boleh kosong' });
   }
@@ -20,7 +21,22 @@ router.post('/', async (req, res) => {
   const targetUrl = parsed.href;
 
   try {
+    // Check quota
+    const ip = req.headers['x-forwarded-for']?.split(',')[0]?.trim() || req.ip;
+    const identifier = email?.toLowerCase().trim() || ip;
+    const quota = await canScan(identifier);
+
+    if (!quota.allowed) {
+      return res.status(429).json({
+        error: 'Kuota scan habis. Upgrade untuk scan lebih banyak.',
+        quota: { remaining: 0, plan: quota.plan },
+      });
+    }
+
     const result = await checkURL(targetUrl);
+
+    // Record usage
+    await recordScan(identifier, 'url');
     res.json({
       url: result.url,
       finalUrl: result.finalUrl,

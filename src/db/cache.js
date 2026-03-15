@@ -29,6 +29,40 @@ async function initDB() {
         expires_at TIMESTAMPTZ NOT NULL
       )
     `);
+    await client.query(`
+      CREATE TABLE IF NOT EXISTS scan_quota (
+        identifier TEXT PRIMARY KEY,
+        credits    INT NOT NULL DEFAULT 3,
+        plan       TEXT NOT NULL DEFAULT 'free',
+        email      TEXT,
+        mayar_customer_id TEXT,
+        created_at TIMESTAMPTZ DEFAULT NOW(),
+        updated_at TIMESTAMPTZ DEFAULT NOW()
+      )
+    `);
+    await client.query(`
+      CREATE TABLE IF NOT EXISTS scan_usage (
+        id         SERIAL PRIMARY KEY,
+        identifier TEXT NOT NULL,
+        scan_type  TEXT NOT NULL DEFAULT 'file',
+        created_at TIMESTAMPTZ DEFAULT NOW()
+      )
+    `);
+    await client.query(`
+      CREATE TABLE IF NOT EXISTS payments (
+        id              SERIAL PRIMARY KEY,
+        mayar_trx_id    TEXT UNIQUE,
+        identifier      TEXT NOT NULL,
+        email           TEXT,
+        amount          INT NOT NULL,
+        credits         INT NOT NULL,
+        plan            TEXT NOT NULL DEFAULT 'credits',
+        status          TEXT NOT NULL DEFAULT 'pending',
+        mayar_link      TEXT,
+        created_at      TIMESTAMPTZ DEFAULT NOW(),
+        paid_at         TIMESTAMPTZ
+      )
+    `);
     console.log('[DB] tables ready');
   } finally {
     client.release();

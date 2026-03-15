@@ -15,6 +15,7 @@ export default function Nav({ minimal = false }) {
             <div className="nav-links">
               <a href="/#cara-kerja" className="nav-link">Cara Kerja</a>
               <a href="/#kenapa" className="nav-link">Keunggulan</a>
+              <a href="/pricing" className="nav-link">Harga</a>
               <a href="/#faq" className="nav-link">FAQ</a>
             </div>
           </>

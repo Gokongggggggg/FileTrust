@@ -1,0 +1,337 @@
+/* ═══════════════════════════════════════════
+   PRICING HERO
+   ═══════════════════════════════════════════ */
+.pr-hero {
+  background: linear-gradient(160deg, #0c1929 0%, #1e1b4b 30%, #4c1d95 60%, #7c3aed 100%);
+  padding: 56px 20px 110px;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.pr-hero .hero-inner { position: relative; z-index: 2; }
+
+.pr-hero .hero-inner h1 {
+  font-size: 32px;
+  font-weight: 800;
+  color: #fff;
+  letter-spacing: -0.7px;
+  line-height: 1.2;
+  margin-bottom: 14px;
+}
+
+.pr-hero .hero-inner p {
+  font-size: 16px;
+  color: rgba(255,255,255,0.7);
+  max-width: 480px;
+  margin: 0 auto;
+  line-height: 1.65;
+}
+
+/* ═══════════════════════════════════════════
+   PRICING WRAP
+   ═══════════════════════════════════════════ */
+.pr-wrap {
+  max-width: 960px;
+  margin: -60px auto 0;
+  padding: 0 28px 80px;
+  position: relative;
+  z-index: 2;
+}
+
+/* ═══════════════════════════════════════════
+   CURRENT QUOTA
+   ═══════════════════════════════════════════ */
+.pr-current {
+  background: #fff;
+  border: 1px solid var(--slate-200);
+  border-radius: var(--radius-xl);
+  padding: 24px 28px;
+  text-align: center;
+  margin-bottom: 24px;
+  box-shadow: var(--shadow);
+}
+
+.pr-current-label {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--slate-400);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-bottom: 8px;
+}
+
+.pr-current-value {
+  font-size: 20px;
+  font-weight: 800;
+  color: var(--slate-800);
+  margin-bottom: 4px;
+}
+
+.pr-current-plan {
+  font-size: 13px;
+  color: var(--slate-500);
+}
+
+/* ═══════════════════════════════════════════
+   EMAIL SECTION
+   ═══════════════════════════════════════════ */
+.pr-email-section {
+  background: #fff;
+  border: 1px solid var(--slate-200);
+  border-radius: var(--radius-xl);
+  padding: 28px;
+  margin-bottom: 24px;
+  box-shadow: var(--shadow);
+}
+
+.pr-email-label {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--slate-700);
+  display: block;
+  margin-bottom: 10px;
+}
+
+.pr-email-input {
+  width: 100%;
+  padding: 14px 18px;
+  font-size: 15px;
+  font-family: 'Inter', sans-serif;
+  font-weight: 500;
+  color: var(--slate-800);
+  background: var(--slate-50);
+  border: 2px solid var(--slate-200);
+  border-radius: 12px;
+  outline: none;
+  transition: all 0.25s;
+}
+
+.pr-email-input:focus {
+  border-color: #7c3aed;
+  background: #fff;
+  box-shadow: 0 0 0 4px rgba(124,58,237,0.1);
+}
+
+.pr-email-hint {
+  font-size: 12px;
+  color: var(--slate-400);
+  margin-top: 8px;
+  line-height: 1.5;
+}
+
+/* ═══════════════════════════════════════════
+   PLAN GRID
+   ═══════════════════════════════════════════ */
+.pr-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+  margin-bottom: 32px;
+}
+
+.pr-card {
+  background: #fff;
+  border: 2px solid var(--slate-200);
+  border-radius: 20px;
+  padding: 28px 22px;
+  text-align: center;
+  transition: all 0.25s;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+}
+
+.pr-card:hover {
+  box-shadow: var(--shadow-lg);
+  transform: translateY(-4px);
+}
+
+.pr-card--popular {
+  border-color: #7c3aed;
+  box-shadow: 0 0 0 1px #7c3aed, var(--shadow-lg);
+}
+
+.pr-popular-badge {
+  position: absolute;
+  top: -12px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: linear-gradient(135deg, #7c3aed, #a855f7);
+  color: #fff;
+  font-size: 11px;
+  font-weight: 700;
+  padding: 4px 16px;
+  border-radius: 100px;
+  white-space: nowrap;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.pr-card-name {
+  font-size: 18px;
+  font-weight: 800;
+  color: var(--slate-800);
+  margin-bottom: 12px;
+}
+
+.pr-card-price {
+  margin-bottom: 12px;
+}
+
+.pr-price-amount {
+  font-size: 28px;
+  font-weight: 800;
+  color: var(--slate-900);
+  font-family: 'JetBrains Mono', monospace;
+  letter-spacing: -1px;
+}
+
+.pr-price-period {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--slate-400);
+  margin-left: 2px;
+}
+
+.pr-card-desc {
+  font-size: 13px;
+  color: var(--slate-500);
+  line-height: 1.5;
+  margin-bottom: 20px;
+}
+
+.pr-card-features {
+  list-style: none;
+  text-align: left;
+  margin-bottom: 24px;
+  flex: 1;
+}
+
+.pr-card-features li {
+  font-size: 13px;
+  color: var(--slate-600);
+  padding: 5px 0;
+  padding-left: 20px;
+  position: relative;
+  line-height: 1.4;
+}
+
+.pr-card-features li::before {
+  content: '✓';
+  position: absolute;
+  left: 0;
+  color: var(--green-500);
+  font-weight: 700;
+}
+
+.pr-card-btn {
+  width: 100%;
+  padding: 14px;
+  background: var(--slate-100);
+  color: var(--slate-700);
+  border: none;
+  border-radius: 12px;
+  font-size: 14px;
+  font-weight: 700;
+  font-family: 'Inter', sans-serif;
+  cursor: pointer;
+  transition: all 0.25s;
+}
+
+.pr-card-btn:hover:not(:disabled) {
+  background: var(--slate-200);
+  transform: translateY(-2px);
+}
+
+.pr-card-btn--primary {
+  background: linear-gradient(135deg, #7c3aed, #a855f7);
+  color: #fff;
+  box-shadow: 0 4px 16px rgba(124,58,237,0.3);
+}
+
+.pr-card-btn--primary:hover:not(:disabled) {
+  background: linear-gradient(135deg, #6d28d9, #9333ea);
+  box-shadow: 0 6px 24px rgba(124,58,237,0.4);
+}
+
+.pr-card-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* ═══════════════════════════════════════════
+   FREE TIER INFO
+   ═══════════════════════════════════════════ */
+.pr-free-info {
+  background: linear-gradient(135deg, #f0fdf4, #dcfce7);
+  border: 1px solid var(--green-200);
+  border-radius: 18px;
+  padding: 28px 32px;
+  text-align: center;
+  margin-bottom: 24px;
+}
+
+.pr-free-info h3 {
+  font-size: 16px;
+  font-weight: 800;
+  color: var(--green-800);
+  margin-bottom: 8px;
+}
+
+.pr-free-info p {
+  font-size: 14px;
+  color: var(--green-700);
+  line-height: 1.6;
+}
+
+/* ═══════════════════════════════════════════
+   PAYMENT METHODS
+   ═══════════════════════════════════════════ */
+.pr-payment-methods {
+  text-align: center;
+}
+
+.pr-payment-methods h4 {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--slate-400);
+  margin-bottom: 12px;
+}
+
+.pr-methods-list {
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin-bottom: 12px;
+}
+
+.pr-method {
+  padding: 6px 14px;
+  background: #fff;
+  border: 1px solid var(--slate-200);
+  border-radius: 100px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--slate-500);
+}
+
+.pr-powered {
+  font-size: 12px;
+  color: var(--slate-400);
+}
+
+/* ═══════════════════════════════════════════
+   RESPONSIVE
+   ═══════════════════════════════════════════ */
+@media (max-width: 768px) {
+  .pr-wrap { padding: 0 16px 60px; }
+  .pr-hero { padding: 40px 16px 96px; }
+  .pr-hero .hero-inner h1 { font-size: 24px; }
+  .pr-grid { grid-template-columns: 1fr 1fr; }
+}
+
+@media (max-width: 480px) {
+  .pr-grid { grid-template-columns: 1fr; }
+}

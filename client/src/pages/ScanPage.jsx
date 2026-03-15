@@ -22,6 +22,10 @@ export default function ScanPage() {
     try {
       const res = await fetch('/api/upload', { method: 'POST', body: form })
       const data = await res.json()
+      if (res.status === 429) {
+        setState('quota')
+        return
+      }
       if (!res.ok) throw new Error(data.error)
       setResult(data.result)
       setCode(data.code)
@@ -271,6 +275,40 @@ export default function ScanPage() {
       </>
     )
   }
+
+  // ── QUOTA EXCEEDED ──
+  if (state === 'quota') return (
+    <>
+      <Nav />
+      <div className="sp-hero sp-hero--danger">
+        <div className="hero-grid" />
+        <div className="hero-orb hero-orb-1" />
+        <div className="hero-orb hero-orb-2" />
+        <div className="hero-inner">
+          <div className="sp-status-badge">⚠️ Kuota Habis</div>
+          <h1>Kuota scan harian kamu habis</h1>
+          <p>Upgrade ke paket berbayar untuk scan lebih banyak.</p>
+        </div>
+      </div>
+      <div className="sp-wrap" style={{ textAlign: 'center' }}>
+        <div className="result-card" style={{ padding: '48px 36px' }}>
+          <div style={{ fontSize: 48, marginBottom: 16 }}>📊</div>
+          <h2 style={{ fontSize: 20, fontWeight: 800, color: '#1e293b', marginBottom: 10 }}>3 scan gratis per hari sudah terpakai</h2>
+          <p style={{ fontSize: 14, color: '#64748b', lineHeight: 1.7, maxWidth: 400, margin: '0 auto 28px' }}>
+            Kamu bisa upgrade untuk mendapatkan kredit scan tambahan atau paket unlimited.
+          </p>
+          <div style={{ display: 'flex', gap: 12, justifyContent: 'center', flexWrap: 'wrap' }}>
+            <a href="/pricing" className="hero-btn-primary" style={{ background: 'linear-gradient(135deg, #7c3aed, #a855f7)', color: '#fff' }}>
+              Lihat Paket Upgrade
+            </a>
+            <a href="/scan" className="hero-btn-secondary" style={{ color: '#1e293b', borderColor: '#e2e8f0' }} onClick={e => { e.preventDefault(); setState('idle') }}>
+              Kembali
+            </a>
+          </div>
+        </div>
+      </div>
+    </>
+  )
 
   // ── IDLE ──
   return (
