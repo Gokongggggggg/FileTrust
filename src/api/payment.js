@@ -34,7 +34,7 @@ router.get('/plans', (req, res) => {
  * POST /api/payment/create — create a Mayar payment
  */
 router.post('/create', async (req, res) => {
-  const { planId, email, name } = req.body;
+  const { planId, email, name, mobile } = req.body;
 
   if (!planId || !PLANS[planId]) {
     return res.status(400).json({ error: 'Plan tidak valid' });
@@ -60,7 +60,7 @@ router.post('/create', async (req, res) => {
       amount: plan.price,
       description: `${plan.name} — FileTrust`,
       redirectURL: `${baseUrl}/payment/success`,
-      mobile: '',
+      mobile: mobile || '08000000000',
     }, {
       headers: {
         'Authorization': `Bearer ${apiKey}`,
