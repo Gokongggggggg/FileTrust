@@ -43,12 +43,14 @@ async function scanPDF(fileBuffer, fileName) {
 
   // File is unsafe if: VT detects threats OR embedded JS found OR malicious URLs inside
   const vtMalicious = vtFileScan?.malicious || false;
-  const isSafe = !vtMalicious && !hasEmbeddedJS && maliciousURLs.length === 0;
+  const vtFailed = vtFileScan === null;
+  const isSafe = !vtMalicious && !vtFailed && !hasEmbeddedJS && maliciousURLs.length === 0;
 
   const result = {
     fileName,
     fileHash,
     isSafe,
+    vtFailed,
     hasEmbeddedJS,
     jsDetails,
     totalURLs: urls.length,

@@ -70,31 +70,45 @@ export default function ScanPage() {
   // ── DONE ──
   if (state === 'done' && result) {
     const isSafe = result.isSafe
+    const vtFailed = result.vtFailed
     const vt = result.virusTotal
     const vtStats = vt?.stats || {}
     const vtDetections = vt?.detections || []
     const totalEngines = vt?.totalEngines || 0
     const maliciousCount = (vtStats.malicious || 0) + (vtStats.suspicious || 0)
 
+    // 3 states: safe, danger, warning (VT failed)
+    const heroClass = isSafe ? 'sp-hero--safe' : 'sp-hero--danger'
+    const statusLabel = isSafe
+      ? '✅ File Aman'
+      : vtFailed
+        ? '⚠️ Tidak Dapat Diverifikasi'
+        : '⚠️ File Mencurigakan'
+
     return (
       <>
         <Nav />
-        <div className={`sp-hero sp-hero--short ${isSafe ? 'sp-hero--safe' : 'sp-hero--danger'}`}>
+        <div className={`sp-hero sp-hero--short ${heroClass}`}>
           <div className="hero-grid" />
           <div className="hero-orb hero-orb-1" />
           <div className="hero-orb hero-orb-2" />
           <div className="hero-inner">
-            <div className="sp-status-badge">
-              {isSafe ? '✅ File Aman' : '⚠️ File Mencurigakan'}
-            </div>
-            <h1>{isSafe ? 'File kamu aman!' : 'File ini mencurigakan'}</h1>
+            <div className="sp-status-badge">{statusLabel}</div>
+            <h1>{isSafe
+              ? 'File kamu aman!'
+              : vtFailed
+                ? 'Scan gagal — file tidak bisa diverifikasi'
+                : 'File ini mencurigakan'
+            }</h1>
             <p>{isSafe
               ? totalEngines > 0
                 ? `Tidak ada ancaman terdeteksi dari ${totalEngines} engine antivirus.`
                 : 'Bagikan kode di bawah ke penerima file.'
-              : totalEngines > 0
-                ? `${maliciousCount} dari ${totalEngines} engine mendeteksi ancaman.`
-                : 'Jangan kirim file ini ke siapapun.'
+              : vtFailed
+                ? 'VirusTotal tidak bisa memproses file ini. File dianggap tidak aman sampai bisa diverifikasi.'
+                : totalEngines > 0
+                  ? `${maliciousCount} dari ${totalEngines} engine mendeteksi ancaman.`
+                  : 'Jangan kirim file ini ke siapapun.'
             }</p>
           </div>
         </div>
@@ -172,17 +186,17 @@ export default function ScanPage() {
                   {isSafe ? '✓ Aman untuk didownload' : '✗ Tidak aman — jangan download'}
                 </span>
               </div>
-              {totalEngines > 0 && (
-                <div className="detail-row">
-                  <span className="detail-label">VirusTotal</span>
-                  <span className={`detail-value ${maliciousCount > 0 ? 'status-danger' : 'status-safe'}`}>
-                    {maliciousCount > 0
+              <div className="detail-row">
+                <span className="detail-label">VirusTotal</span>
+                <span className={`detail-value ${vtFailed ? 'status-danger' : maliciousCount > 0 ? 'status-danger' : 'status-safe'}`}>
+                  {vtFailed
+                    ? '✗ Scan gagal — tidak bisa memverifikasi file'
+                    : maliciousCount > 0
                       ? `✗ ${maliciousCount} dari ${totalEngines} engine mendeteksi ancaman`
                       : `✓ ${totalEngines} engine — tidak ada ancaman`
-                    }
-                  </span>
-                </div>
-              )}
+                  }
+                </span>
+              </div>
               <div className="detail-row">
                 <span className="detail-label">Script tersembunyi</span>
                 <span className={`detail-value ${result.hasEmbeddedJS ? 'status-danger' : 'status-safe'}`}>
