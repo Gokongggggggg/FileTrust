@@ -2,7 +2,7 @@ const axios = require('axios');
 const { scanPDF } = require('../scanner');
 const { formatReply } = require('./reply');
 
-const WA_API = 'https://graph.facebook.com/v19.0';
+const WA_API = 'https://graph.facebook.com/v22.0';
 
 /**
  * Download file from WhatsApp media URL
