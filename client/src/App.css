@@ -1,0 +1,315 @@
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  background: #f8fafc;
+  color: #1e293b;
+  min-height: 100vh;
+}
+
+.container {
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 40px 20px;
+}
+
+.header {
+  text-align: center;
+  margin-bottom: 40px;
+}
+
+.logo {
+  font-size: 28px;
+  font-weight: 800;
+  color: #0f172a;
+  letter-spacing: -0.5px;
+}
+
+.logo span { color: #2563eb; }
+
+.tagline {
+  margin-top: 8px;
+  color: #64748b;
+  font-size: 15px;
+}
+
+/* Upload zone */
+.upload-zone {
+  border: 2px dashed #cbd5e1;
+  border-radius: 16px;
+  padding: 48px 24px;
+  text-align: center;
+  background: white;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.upload-zone:hover, .upload-zone.drag-over {
+  border-color: #2563eb;
+  background: #eff6ff;
+}
+
+.upload-icon { font-size: 48px; margin-bottom: 16px; }
+
+.upload-zone h2 {
+  font-size: 18px;
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+
+.upload-zone p { color: #94a3b8; font-size: 14px; }
+
+.upload-btn {
+  display: inline-block;
+  margin-top: 20px;
+  padding: 12px 28px;
+  background: #2563eb;
+  color: white;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 15px;
+  border: none;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.upload-btn:hover { background: #1d4ed8; }
+.upload-btn:disabled { background: #94a3b8; cursor: not-allowed; }
+
+/* Scanning */
+.scanning {
+  text-align: center;
+  padding: 48px 24px;
+  background: white;
+  border-radius: 16px;
+}
+
+.spinner {
+  width: 48px;
+  height: 48px;
+  border: 4px solid #e2e8f0;
+  border-top-color: #2563eb;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+  margin: 0 auto 20px;
+}
+
+@keyframes spin { to { transform: rotate(360deg); } }
+
+.scanning h2 { font-size: 18px; font-weight: 600; margin-bottom: 8px; }
+.scanning p { color: #64748b; font-size: 14px; }
+
+/* Result */
+.result-box { background: white; border-radius: 16px; overflow: hidden; }
+
+.result-header {
+  padding: 28px 28px 20px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.result-header.safe { background: #f0fdf4; border-bottom: 1px solid #bbf7d0; }
+.result-header.danger { background: #fff7ed; border-bottom: 1px solid #fed7aa; }
+.result-icon { font-size: 40px; }
+
+.result-header h2 { font-size: 20px; font-weight: 700; }
+.result-header.safe h2 { color: #15803d; }
+.result-header.danger h2 { color: #c2410c; }
+.result-header p { font-size: 14px; color: #64748b; margin-top: 4px; }
+
+.result-body { padding: 24px 28px; }
+
+.result-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 12px 0;
+  border-bottom: 1px solid #f1f5f9;
+  font-size: 14px;
+}
+
+.result-item:last-child { border-bottom: none; }
+.result-item .label { color: #64748b; min-width: 130px; flex-shrink: 0; }
+.result-item .value { font-weight: 500; color: #1e293b; word-break: break-all; }
+
+.badge-safe { color: #16a34a; font-weight: 600; }
+.badge-danger { color: #dc2626; font-weight: 600; }
+
+.url-item { padding: 2px 0; color: #dc2626; font-size: 13px; }
+
+/* Code box */
+.code-section {
+  margin-top: 24px;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 20px;
+  text-align: center;
+}
+
+.code-label { font-size: 13px; color: #64748b; margin-bottom: 8px; }
+
+.code-value {
+  font-size: 32px;
+  font-weight: 800;
+  letter-spacing: 4px;
+  color: #1e293b;
+  font-family: 'Courier New', monospace;
+}
+
+.code-hint { font-size: 13px; color: #94a3b8; margin-top: 8px; }
+
+.copy-btn {
+  margin-top: 12px;
+  padding: 8px 20px;
+  background: #f1f5f9;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  color: #475569;
+  transition: all 0.2s;
+}
+
+.copy-btn:hover { background: #e2e8f0; }
+
+/* Buttons */
+.download-btn {
+  display: block;
+  width: 100%;
+  margin-top: 20px;
+  padding: 14px;
+  background: #16a34a;
+  color: white;
+  border: none;
+  border-radius: 10px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  text-align: center;
+  text-decoration: none;
+}
+
+.download-btn:hover { background: #15803d; }
+
+.download-disabled {
+  display: block;
+  width: 100%;
+  margin-top: 20px;
+  padding: 14px;
+  background: #f1f5f9;
+  color: #94a3b8;
+  border: none;
+  border-radius: 10px;
+  font-size: 16px;
+  font-weight: 600;
+  text-align: center;
+  cursor: not-allowed;
+}
+
+/* Check code */
+.check-section {
+  margin-top: 32px;
+  background: white;
+  border-radius: 16px;
+  padding: 24px;
+}
+
+.check-section h3 { font-size: 15px; font-weight: 600; margin-bottom: 12px; }
+
+.code-input-row { display: flex; gap: 8px; }
+
+.code-input {
+  flex: 1;
+  padding: 12px 16px;
+  border: 1.5px solid #e2e8f0;
+  border-radius: 8px;
+  font-size: 16px;
+  font-family: 'Courier New', monospace;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+.code-input:focus { border-color: #2563eb; }
+
+.check-btn {
+  padding: 12px 20px;
+  background: #2563eb;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.check-btn:hover { background: #1d4ed8; }
+
+/* Trust badges */
+.trust-badges {
+  margin-top: 32px;
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.badge {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: white;
+  border: 1px solid #e2e8f0;
+  border-radius: 100px;
+  padding: 6px 14px;
+  font-size: 12px;
+  color: #64748b;
+}
+
+/* Result page */
+.back-link {
+  display: inline-block;
+  margin-bottom: 16px;
+  color: #2563eb;
+  font-size: 14px;
+  text-decoration: none;
+}
+
+.back-link:hover { text-decoration: underline; }
+
+.error-box {
+  background: white;
+  border-radius: 16px;
+  padding: 48px 24px;
+  text-align: center;
+}
+
+.error-box h2 { font-size: 20px; font-weight: 700; margin-bottom: 8px; }
+.error-box p { color: #64748b; font-size: 15px; }
+
+.expires-note {
+  text-align: center;
+  margin-top: 16px;
+  font-size: 13px;
+  color: #94a3b8;
+}
+
+.new-scan-btn {
+  margin-top: 12px;
+  display: inline-block;
+  padding: 10px 24px;
+  background: #2563eb;
+  color: white;
+  border-radius: 8px;
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 14px;
+}

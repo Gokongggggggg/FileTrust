@@ -1,14 +1,24 @@
 require('dotenv').config();
 const express = require('express');
+const path = require('path');
 const { initDB } = require('./db/cache');
-const webhookRouter = require('./bot/webhook');
+const { cleanExpired } = require('./db/fileStore');
+const uploadRouter = require('./api/upload');
+const resultRouter = require('./api/result');
 
 const app = express();
 app.use(express.json());
 
-app.get('/health', (req, res) => res.json({ status: 'ok', service: 'SafeSend' }));
+// API routes
+app.get('/health', (req, res) => res.json({ status: 'ok', service: 'FileTrust' }));
+app.use('/api/upload', uploadRouter);
+app.use('/api/result', resultRouter);
 
-app.use('/webhook', webhookRouter);
+// Serve React frontend
+app.use(express.static(path.join(__dirname, '../client/dist')));
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, '../client/dist/index.html'));
+});
 
 const PORT = process.env.PORT || 3000;
 
@@ -16,9 +26,13 @@ async function start() {
   try {
     await initDB();
   } catch (err) {
-    console.warn('[DB] Could not connect to database:', err.message, '— running without cache');
+    console.warn('[DB] Could not connect:', err.message);
   }
-  app.listen(PORT, () => console.log(`[SafeSend] Server running on port ${PORT}`));
+
+  // Clean expired files every hour
+  setInterval(cleanExpired, 60 * 60 * 1000);
+
+  app.listen(PORT, () => console.log(`[FileTrust] Server running on port ${PORT}`));
 }
 
 start();

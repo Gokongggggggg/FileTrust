@@ -19,7 +19,17 @@ async function initDB() {
         created_at TIMESTAMPTZ DEFAULT NOW()
       )
     `);
-    console.log('[DB] scan_cache table ready');
+    await client.query(`
+      CREATE TABLE IF NOT EXISTS file_store (
+        code       TEXT PRIMARY KEY,
+        file_name  TEXT NOT NULL,
+        file_data  TEXT NOT NULL,
+        scan_result JSONB NOT NULL,
+        created_at TIMESTAMPTZ DEFAULT NOW(),
+        expires_at TIMESTAMPTZ NOT NULL
+      )
+    `);
+    console.log('[DB] tables ready');
   } finally {
     client.release();
   }
