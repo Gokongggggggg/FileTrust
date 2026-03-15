@@ -142,11 +142,10 @@ export default function HomePage() {
 
       {/* ══ TRUST BAR ══ */}
       <div className="trust-bar">
-        <span className="trust-pill">🔍 VirusTotal</span>
+        <span className="trust-pill">🔍 72 Engine Antivirus</span>
         <span className="trust-pill">🛡️ Google Safe Browsing</span>
-        <span className="trust-pill">🗑️ Auto-hapus 24 jam</span>
-        <span className="trust-pill">🚫 Zero iklan</span>
-        <span className="trust-pill">🔒 Tanpa daftar</span>
+        <span className="trust-pill">⚠️ Deteksi Malware & Phishing</span>
+        <span className="trust-pill">📄 Analisis PDF Mendalam</span>
       </div>
 
       {/* ══ PROBLEM STATEMENT ══ */}
@@ -246,24 +245,52 @@ export default function HomePage() {
         </div>
       </div>
 
-      {/* ══ STATS ══ */}
-      <div className="stats-bar">
-        <div className="stats-inner">
-          <div className="stat-item">
-            <div className="stat-value"><span className="stat-accent">72</span></div>
-            <div className="stat-label">Engine Antivirus</div>
+      {/* ══ VIRUSTOTAL SECTION ══ */}
+      <div className="vt-section" id="teknologi">
+        <div className="vt-inner">
+          <div className="vt-content">
+            <span className="section-tag">Teknologi di Balik FileTrust</span>
+            <h2>Dipindai oleh VirusTotal — standar industri keamanan siber.</h2>
+            <p>
+              VirusTotal adalah platform milik <strong>Google</strong> yang digunakan oleh perusahaan keamanan
+              dan pemerintah di seluruh dunia. Setiap file yang kamu upload dipindai secara paralel oleh
+              <strong> 72 engine antivirus</strong> sekaligus — termasuk Kaspersky, McAfee, Avast, Bitdefender,
+              dan puluhan lainnya.
+            </p>
+            <p>
+              Selain itu, setiap URL di dalam PDF juga dicek menggunakan <strong>Google Safe Browsing</strong> —
+              sistem yang sama yang melindungi miliaran pengguna Chrome dari situs phishing dan malware.
+            </p>
           </div>
-          <div className="stat-item">
-            <div className="stat-value">24<span className="stat-accent">jam</span></div>
-            <div className="stat-label">Auto Hapus</div>
-          </div>
-          <div className="stat-item">
-            <div className="stat-value"><span className="stat-accent">0</span></div>
-            <div className="stat-label">Data Disimpan</div>
-          </div>
-          <div className="stat-item">
-            <div className="stat-value">100<span className="stat-accent">%</span></div>
-            <div className="stat-label">Gratis</div>
+          <div className="vt-stats">
+            <div className="vt-stat-grid">
+              <div className="vt-stat">
+                <div className="vt-stat-value">72</div>
+                <div className="vt-stat-label">Engine Antivirus</div>
+              </div>
+              <div className="vt-stat">
+                <div className="vt-stat-value">1<span>juta+</span></div>
+                <div className="vt-stat-label">File discan per hari di VirusTotal</div>
+              </div>
+              <div className="vt-stat">
+                <div className="vt-stat-value">Google</div>
+                <div className="vt-stat-label">Safe Browsing untuk cek URL</div>
+              </div>
+              <div className="vt-stat">
+                <div className="vt-stat-value">Real-time</div>
+                <div className="vt-stat-label">Database ancaman terupdate</div>
+              </div>
+            </div>
+            <div className="vt-engines">
+              <span className="vt-engine">Kaspersky</span>
+              <span className="vt-engine">McAfee</span>
+              <span className="vt-engine">Avast</span>
+              <span className="vt-engine">Bitdefender</span>
+              <span className="vt-engine">ESET</span>
+              <span className="vt-engine">Sophos</span>
+              <span className="vt-engine">Malwarebytes</span>
+              <span className="vt-engine">+65 lainnya</span>
+            </div>
           </div>
         </div>
       </div>
@@ -279,10 +306,10 @@ export default function HomePage() {
           {[
             { icon: '🔐', title: 'Anti manipulasi', desc: 'File yang didownload adalah persis file yang sudah dipindai. Tidak bisa di-swap oleh siapapun.' },
             { icon: '⚡', title: 'Hasil instan', desc: 'Scan selesai dalam hitungan detik. Kamu langsung tahu apakah file aman atau berbahaya.' },
-            { icon: '🔎', title: '72 engine antivirus', desc: 'Dipindai menggunakan VirusTotal yang menggabungkan 72 engine antivirus terkemuka sekaligus.' },
-            { icon: '🗑️', title: 'Privasi terjaga', desc: 'File otomatis dihapus permanen setelah 24 jam. Tidak ada penyimpanan jangka panjang.' },
+            { icon: '🦠', title: 'Deteksi malware', desc: 'Mendeteksi trojan, ransomware, spyware, dan jenis malware lainnya yang tersembunyi di dalam file PDF.' },
+            { icon: '🎣', title: 'Anti-phishing', desc: 'Semua URL di dalam PDF dicek — link login palsu, redirect berbahaya, dan situs penipuan langsung terdeteksi.' },
             { icon: '🔗', title: 'Share via kode', desc: 'Cukup kirim kode 8 karakter ke penerima. Mereka bisa verifikasi dan download langsung.' },
-            { icon: '🚫', title: 'Zero iklan & tracking', desc: 'Tidak ada iklan, tidak ada tracker. Fokus pada satu hal: keamanan file kamu.' },
+            { icon: '📊', title: 'Laporan detail', desc: 'Lihat engine mana yang mendeteksi ancaman, jenis ancaman apa, dan skor keamanan keseluruhan file.' },
           ].map(f => (
             <div key={f.title} className="feature-card">
               <div className="feature-icon">{f.icon}</div>

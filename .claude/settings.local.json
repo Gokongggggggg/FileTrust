@@ -6,7 +6,8 @@
       "Bash(node:*)",
       "Bash(sleep:*)",
       "Bash(taskkill:*)",
-      "Bash(rm:*)"
+      "Bash(rm:*)",
+      "Bash(npm run:*)"
     ]
   }
 }

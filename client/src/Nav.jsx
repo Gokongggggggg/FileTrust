@@ -39,7 +39,6 @@ export default function Nav({ minimal = false }) {
             </a>
           </div>
         )}
-        <span className="nav-badge">Powered by VirusTotal</span>
       </div>
     </nav>
   )
