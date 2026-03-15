@@ -1,11 +1,15 @@
 import { useEffect, useState } from 'react'
 import HomePage from './pages/HomePage'
 import ResultPage from './pages/ResultPage'
+import ScanPage from './pages/ScanPage'
+import CheckLinkPage from './pages/CheckLinkPage'
 
 function getRoute() {
   const path = window.location.pathname
   const match = path.match(/^\/result\/([A-Z0-9]{4}-[A-Z0-9]{4})$/i)
   if (match) return { page: 'result', code: match[1].toUpperCase() }
+  if (path === '/scan') return { page: 'scan' }
+  if (path === '/cek-link') return { page: 'cek-link' }
   return { page: 'home' }
 }
 
@@ -19,5 +23,7 @@ export default function App() {
   }, [])
 
   if (route.page === 'result') return <ResultPage code={route.code} />
+  if (route.page === 'scan') return <ScanPage />
+  if (route.page === 'cek-link') return <CheckLinkPage />
   return <HomePage />
 }
