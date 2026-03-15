@@ -7,11 +7,11 @@ function HeroParticles() {
   useEffect(() => {
     const el = ref.current
     if (!el) return
-    for (let i = 0; i < 18; i++) {
+    for (let i = 0; i < 20; i++) {
       const p = document.createElement('div')
       p.className = 'particle'
-      const sz = Math.random() * 3 + 2
-      p.style.cssText = `width:${sz}px;height:${sz}px;left:${Math.random()*100}%;bottom:${Math.random()*30}%;animation-duration:${Math.random()*8+6}s;animation-delay:${Math.random()*8}s;opacity:${Math.random()*0.4+0.1}`
+      const sz = Math.random() * 3 + 1.5
+      p.style.cssText = `width:${sz}px;height:${sz}px;left:${Math.random()*100}%;bottom:${Math.random()*30}%;animation-duration:${Math.random()*10+8}s;animation-delay:${Math.random()*10}s;opacity:${Math.random()*0.3+0.1}`
       el.appendChild(p)
     }
   }, [])
@@ -59,8 +59,29 @@ function Hero() {
       </div>
 
       <div className="hero-inner">
-        <h1>Verifikasi keamanan file,<br />sebelum siapapun ragu.</h1>
-        <p>Scan PDF atau cek link mencurigakan — gratis, instan, tanpa daftar.</p>
+        <div className="hero-badge">
+          <span className="hero-badge-dot" />
+          Platform keamanan file #1 di Indonesia
+        </div>
+        <h1>Verifikasi keamanan file,<br /><span>sebelum siapapun ragu.</span></h1>
+        <p>Scan PDF atau cek link mencurigakan menggunakan 72 engine antivirus — gratis, instan, tanpa daftar.</p>
+        <div className="hero-cta">
+          <a href="/scan" className="hero-btn-primary">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+              <polyline points="14 2 14 8 20 8"/>
+              <path d="M9 15l2 2 4-4"/>
+            </svg>
+            Scan File PDF
+          </a>
+          <a href="/cek-link" className="hero-btn-secondary">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/>
+              <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/>
+            </svg>
+            Cek Link / URL
+          </a>
+        </div>
       </div>
     </div>
   )
@@ -92,167 +113,12 @@ const FAQS = [
 
 export default function HomePage() {
   const [checkCode, setCheckCode] = useState('')
-  const [dragOver, setDragOver] = useState(false)
-  const [state, setState] = useState('idle')
-  const [result, setResult] = useState(null)
-  const [code, setCode] = useState('')
-  const [copied, setCopied] = useState('')
-  const fileRef = useRef()
 
   function goCheck() {
     const c = checkCode.trim().toUpperCase()
     if (c) window.location.href = `/result/${c}`
   }
 
-  async function handleFile(file) {
-    if (!file) return
-    if (file.type !== 'application/pdf' && !file.name.toLowerCase().endsWith('.pdf')) {
-      alert('Hanya file PDF yang diterima')
-      return
-    }
-    setState('scanning')
-    const form = new FormData()
-    form.append('file', file)
-    try {
-      const res = await fetch('/api/upload', { method: 'POST', body: form })
-      const data = await res.json()
-      if (!res.ok) throw new Error(data.error)
-      setResult(data.result)
-      setCode(data.code)
-      setState('done')
-    } catch {
-      alert('Gagal scan file. Coba lagi.')
-      setState('idle')
-    }
-  }
-
-  function handleDrop(e) {
-    e.preventDefault()
-    setDragOver(false)
-    handleFile(e.dataTransfer.files[0])
-  }
-
-  function copy(text, key) {
-    navigator.clipboard.writeText(text)
-    setCopied(key)
-    setTimeout(() => setCopied(''), 2000)
-  }
-
-  // ── SCANNING ──
-  if (state === 'scanning') return (
-    <>
-      <Nav />
-      <div className="hero" style={{ paddingBottom: 72 }}>
-        <div className="hero-grid" />
-        <div className="hero-orb hero-orb-1" />
-        <div className="hero-inner"><h1>Memindai file kamu...</h1></div>
-      </div>
-      <div className="tools-wrap">
-        <div className="scanning-screen">
-          <div className="spinner" />
-          <h2>Mengecek keamanan file</h2>
-          <p>Memindai virus, script berbahaya, dan link mencurigakan</p>
-        </div>
-      </div>
-    </>
-  )
-
-  // ── DONE ──
-  if (state === 'done' && result) {
-    const isSafe = result.isSafe
-    return (
-      <>
-        <Nav />
-        <div className="hero" style={{ paddingBottom: 72 }}>
-          <div className="hero-grid" />
-          <div className="hero-orb hero-orb-1" />
-          <div className="hero-inner">
-            <h1>{isSafe ? 'File kamu aman!' : 'File ini mencurigakan'}</h1>
-            <p>{isSafe ? 'Bagikan kode di bawah ke penerima file.' : 'Jangan kirim file ini ke siapapun.'}</p>
-          </div>
-        </div>
-        <div className="tools-wrap">
-          <div className="result-card">
-            <div className={`result-banner ${isSafe ? 'safe' : 'danger'}`}>
-              <div className="banner-icon">{isSafe ? '✅' : '⚠️'}</div>
-              <div className="banner-text">
-                <h1>{isSafe ? 'File Ini Aman' : 'File Ini Mencurigakan'}</h1>
-                <p><span className="file-badge">PDF</span> {result.fileName}</p>
-              </div>
-            </div>
-            <div className="result-details">
-              <div className="detail-row">
-                <span className="detail-label">Status</span>
-                <span className={`detail-value ${isSafe ? 'status-safe' : 'status-danger'}`}>
-                  {isSafe ? '✓ Aman untuk didownload' : '✗ Tidak aman — jangan download'}
-                </span>
-              </div>
-              <div className="detail-row">
-                <span className="detail-label">Script tersembunyi</span>
-                <span className={`detail-value ${result.hasEmbeddedJS ? 'status-danger' : 'status-safe'}`}>
-                  {result.hasEmbeddedJS ? '⚠️ Ditemukan' : '✓ Tidak ditemukan'}
-                </span>
-              </div>
-              <div className="detail-row">
-                <span className="detail-label">Link diperiksa</span>
-                <span className="detail-value">{result.totalURLs} link ditemukan</span>
-              </div>
-              {!isSafe && result.maliciousURLs?.length > 0 && (
-                <div className="detail-row">
-                  <span className="detail-label">Link berbahaya</span>
-                  <div className="detail-value">
-                    {result.maliciousURLs.map((u, i) => (
-                      <div key={i} className="url-danger">⚠️ {u.url} — {u.reason}</div>
-                    ))}
-                  </div>
-                </div>
-              )}
-              <div className="detail-row">
-                <span className="detail-label">Waktu scan</span>
-                <span className="detail-value">
-                  {new Date(result.scannedAt).toLocaleString('id-ID', { dateStyle: 'long', timeStyle: 'short' })} WIB
-                </span>
-              </div>
-            </div>
-            <div className="section-divider" />
-            <div className="code-badge">
-              <div className="code-badge-label">Kode Verifikasi</div>
-              <div className="code-badge-value">{code}</div>
-              <div className="code-badge-sub">Berlaku 24 jam — kirim kode ini ke penerima file</div>
-              <div className="copy-row">
-                <button className={`copy-btn ${copied === 'code' ? 'copied' : ''}`} onClick={() => copy(code, 'code')}>
-                  {copied === 'code' ? '✓ Tersalin' : '📋 Salin kode'}
-                </button>
-                <button className={`copy-btn ${copied === 'link' ? 'copied' : ''}`} onClick={() => copy(`${window.location.origin}/result/${code}`, 'link')}>
-                  {copied === 'link' ? '✓ Tersalin' : '🔗 Salin link'}
-                </button>
-              </div>
-            </div>
-            {isSafe ? (
-              <a className="dl-btn" href={`/api/result/${code}/download`} download>
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-                Download File
-              </a>
-            ) : (
-              <div className="dl-disabled">Download dinonaktifkan untuk keamananmu</div>
-            )}
-          </div>
-          <div className="trust-bar" style={{ marginTop: 20, padding: 0 }}>
-            <span className="trust-pill">🔍 VirusTotal</span>
-            <span className="trust-pill">🛡️ Safe Browsing</span>
-            <span className="trust-pill">🗑️ Auto-hapus 24 jam</span>
-          </div>
-          <div style={{ textAlign: 'center' }}>
-            <button className="scan-another" onClick={() => { setState('idle'); setResult(null); setCode('') }}>
-              ← Scan file lain
-            </button>
-          </div>
-        </div>
-      </>
-    )
-  }
-
-  // ── IDLE ──
   return (
     <>
       <Nav />
@@ -283,7 +149,7 @@ export default function HomePage() {
               </svg>
             </div>
             <h3>Cek Link / URL</h3>
-            <p>Tempel URL yang mencurigakan, kami cek apakah aman menggunakan Google Safe Browsing secara real-time.</p>
+            <p>Tempel URL yang mencurigakan, kami cek apakah aman menggunakan VirusTotal dan Google Safe Browsing secara real-time.</p>
             <span className="tool-cta">Cek sekarang
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
             </span>
@@ -299,12 +165,12 @@ export default function HomePage() {
             </svg>
           </div>
           <h3>Punya Kode Verifikasi?</h3>
-          <p>Masukkan kode 8 karakter dari pengirim file untuk lihat hasil scan dan download.</p>
+          <p>Masukkan kode 8 karakter dari pengirim file untuk lihat hasil scan dan download dengan aman.</p>
           <div className="code-check-form">
             <input
               type="text"
               className="code-check-input"
-              placeholder="Contoh: ABCD-1234"
+              placeholder="XXXX-XXXX"
               value={checkCode}
               onChange={e => setCheckCode(e.target.value.toUpperCase())}
               onKeyDown={e => e.key === 'Enter' && goCheck()}
@@ -327,43 +193,68 @@ export default function HomePage() {
         <span className="trust-pill">🔒 Tanpa daftar</span>
       </div>
 
+      {/* Stats */}
+      <div className="stats-bar">
+        <div className="stats-inner">
+          <div className="stat-item">
+            <div className="stat-value"><span className="stat-accent">72</span></div>
+            <div className="stat-label">Engine Antivirus</div>
+          </div>
+          <div className="stat-item">
+            <div className="stat-value">24<span className="stat-accent">jam</span></div>
+            <div className="stat-label">Auto Hapus</div>
+          </div>
+          <div className="stat-item">
+            <div className="stat-value"><span className="stat-accent">0</span></div>
+            <div className="stat-label">Data Disimpan</div>
+          </div>
+          <div className="stat-item">
+            <div className="stat-value">100<span className="stat-accent">%</span></div>
+            <div className="stat-label">Gratis</div>
+          </div>
+        </div>
+      </div>
+
       {/* How It Works */}
       <div className="how-section" id="cara-kerja">
-        <div className="section-title">Cara Kerja</div>
-        <div className="section-sub">Empat langkah simpel dari upload sampai penerima yakin file aman.</div>
+        <div style={{ textAlign: 'center' }}>
+          <span className="section-tag">Cara Kerja</span>
+        </div>
+        <div className="section-title">Simpel, cepat, aman.</div>
+        <div className="section-sub">Empat langkah dari upload sampai penerima yakin file aman.</div>
         <div className="steps">
           <div className="step-card">
             <div className="step-num">1</div>
             <span className="step-icon">📤</span>
-            <h4>Upload / Tempel</h4>
+            <h4>Upload file</h4>
             <p>Upload PDF atau tempel URL yang ingin kamu verifikasi.</p>
           </div>
-          <div className="step-arrow">→</div>
           <div className="step-card">
             <div className="step-num">2</div>
             <span className="step-icon">🔍</span>
             <h4>Scan otomatis</h4>
-            <p>Dipindai 72 engine antivirus & Google Safe Browsing.</p>
+            <p>Dipindai 72 engine antivirus dan Google Safe Browsing.</p>
           </div>
-          <div className="step-arrow">→</div>
           <div className="step-card">
             <div className="step-num">3</div>
             <span className="step-icon">🔑</span>
-            <h4>Dapat kode</h4>
-            <p>Pengirim mendapat kode unik untuk dibagikan ke penerima.</p>
+            <h4>Dapat kode unik</h4>
+            <p>Pengirim dapat kode 8 karakter untuk dibagikan.</p>
           </div>
-          <div className="step-arrow">→</div>
           <div className="step-card">
             <div className="step-num">4</div>
             <span className="step-icon">✅</span>
             <h4>Cek & download</h4>
-            <p>Penerima input kode, lihat hasil scan, dan download aman.</p>
+            <p>Penerima input kode, lihat scan, dan download aman.</p>
           </div>
         </div>
       </div>
 
       {/* Features */}
       <div className="features-section" id="kenapa">
+        <div style={{ textAlign: 'center' }}>
+          <span className="section-tag">Keunggulan</span>
+        </div>
         <div className="section-title">Kenapa FileTrust?</div>
         <div className="section-sub">Satu platform untuk buktikan file kamu benar-benar aman.</div>
         <div className="feature-grid">
@@ -373,7 +264,7 @@ export default function HomePage() {
             { icon: '🔎', title: '72 engine antivirus', desc: 'Dipindai menggunakan VirusTotal yang menggabungkan 72 engine antivirus terkemuka sekaligus.' },
             { icon: '🗑️', title: 'Privasi terjaga', desc: 'File otomatis dihapus permanen setelah 24 jam. Tidak ada penyimpanan jangka panjang.' },
             { icon: '🔗', title: 'Share via kode', desc: 'Cukup kirim kode 8 karakter ke penerima. Mereka bisa verifikasi dan download langsung.' },
-            { icon: '🚫', title: 'Zero iklan & tracking', desc: 'Tidak ada iklan, tidak ada tracker tersembunyi. Fokus pada satu hal: keamanan file kamu.' },
+            { icon: '🚫', title: 'Zero iklan & tracking', desc: 'Tidak ada iklan, tidak ada tracker. Fokus pada satu hal: keamanan file kamu.' },
           ].map(f => (
             <div key={f.title} className="feature-card">
               <div className="feature-icon">{f.icon}</div>
@@ -386,6 +277,9 @@ export default function HomePage() {
 
       {/* FAQ */}
       <div className="faq-section" id="faq">
+        <div style={{ textAlign: 'center' }}>
+          <span className="section-tag">FAQ</span>
+        </div>
         <div className="section-title">Pertanyaan Umum</div>
         <div className="section-sub">Hal-hal yang sering ditanyakan tentang FileTrust.</div>
         <div className="faq-list">
@@ -406,8 +300,28 @@ export default function HomePage() {
       </div>
 
       <footer className="footer">
-        FileTrust — Verifikasi keamanan file untuk semua orang.<br />
-        <a href="/privacy">Kebijakan Privasi</a> · <a href="/terms">Syarat Penggunaan</a> · <a href="/about">Tentang Kami</a>
+        <div className="footer-inner">
+          <div className="footer-brand">
+            <div className="footer-brand-name">File<em>Trust</em></div>
+            <p>Platform verifikasi keamanan file untuk semua orang. Dipindai oleh VirusTotal dan Google Safe Browsing.</p>
+          </div>
+          <div className="footer-links">
+            <div className="footer-col">
+              <h5>Alat</h5>
+              <a href="/scan">Scan File PDF</a>
+              <a href="/cek-link">Cek Link / URL</a>
+            </div>
+            <div className="footer-col">
+              <h5>Info</h5>
+              <a href="/#cara-kerja">Cara Kerja</a>
+              <a href="/#kenapa">Keunggulan</a>
+              <a href="/#faq">FAQ</a>
+            </div>
+          </div>
+        </div>
+        <div className="footer-bottom">
+          &copy; 2026 FileTrust. Dibuat untuk Mayar Vibecoding Competition Ramadan 2026.
+        </div>
       </footer>
     </>
   )
