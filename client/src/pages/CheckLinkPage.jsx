@@ -55,6 +55,14 @@ export default function CheckLinkPage() {
   // ── DONE ──
   if (state === 'done' && result) {
     const isSafe = result.isSafe
+    const vt = result.virusTotal
+    const vtStats = vt?.stats || {}
+    const vtDetections = vt?.detections || []
+    const totalEngines = vt?.totalEngines || 0
+    const maliciousCount = (vtStats.malicious || 0) + (vtStats.suspicious || 0)
+    const harmlessCount = vtStats.harmless || 0
+    const undetectedCount = vtStats.undetected || 0
+
     return (
       <>
         <Nav />
@@ -68,8 +76,8 @@ export default function CheckLinkPage() {
             </div>
             <h1>{isSafe ? 'Link ini aman' : 'Link ini berbahaya!'}</h1>
             <p>{isSafe
-              ? 'URL sudah diverifikasi aman oleh VirusTotal dan Google Safe Browsing.'
-              : 'Jangan klik atau bagikan link ini ke siapapun.'
+              ? `Tidak ada ancaman terdeteksi dari ${totalEngines} engine antivirus.`
+              : `${maliciousCount} dari ${totalEngines} engine mendeteksi ancaman.`
             }</p>
           </div>
         </div>
@@ -84,6 +92,62 @@ export default function CheckLinkPage() {
                 <p><span className="file-badge">URL</span> Hasil pemeriksaan link</p>
               </div>
             </div>
+
+            {/* VT Score Badge */}
+            {totalEngines > 0 && (
+              <div className="cl-vt-score">
+                <div className={`cl-vt-score-circle ${maliciousCount > 0 ? 'danger' : 'safe'}`}>
+                  <span className="cl-vt-score-num">{maliciousCount}</span>
+                  <span className="cl-vt-score-sep">/</span>
+                  <span className="cl-vt-score-total">{totalEngines}</span>
+                </div>
+                <div className="cl-vt-score-label">
+                  {maliciousCount > 0
+                    ? `${maliciousCount} engine mendeteksi ancaman`
+                    : 'Tidak ada engine yang mendeteksi ancaman'
+                  }
+                </div>
+              </div>
+            )}
+
+            {/* VT Stats Breakdown */}
+            {totalEngines > 0 && (
+              <div className="cl-vt-stats">
+                <div className="cl-vt-stat-item danger">
+                  <span className="cl-vt-stat-num">{vtStats.malicious || 0}</span>
+                  <span className="cl-vt-stat-label">Malicious</span>
+                </div>
+                <div className="cl-vt-stat-item warning">
+                  <span className="cl-vt-stat-num">{vtStats.suspicious || 0}</span>
+                  <span className="cl-vt-stat-label">Suspicious</span>
+                </div>
+                <div className="cl-vt-stat-item safe">
+                  <span className="cl-vt-stat-num">{harmlessCount}</span>
+                  <span className="cl-vt-stat-label">Harmless</span>
+                </div>
+                <div className="cl-vt-stat-item neutral">
+                  <span className="cl-vt-stat-num">{undetectedCount}</span>
+                  <span className="cl-vt-stat-label">Undetected</span>
+                </div>
+              </div>
+            )}
+
+            {/* Detection list if dangerous */}
+            {vtDetections.length > 0 && (
+              <div className="cl-detections">
+                <h3>Engine yang mendeteksi ancaman:</h3>
+                <div className="cl-detection-list">
+                  {vtDetections.map(d => (
+                    <div key={d.engine} className="cl-detection-item">
+                      <span className="cl-detection-engine">{d.engine}</span>
+                      <span className={`cl-detection-badge ${d.category}`}>
+                        {d.result || d.category}
+                      </span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
 
             <div className="result-details">
               <div className="detail-row">
@@ -115,21 +179,28 @@ export default function CheckLinkPage() {
                 </div>
               )}
               <div className="detail-row">
+                <span className="detail-label">Google Safe Browsing</span>
+                <span className={`detail-value ${result.googleSafeBrowsing?.flagged ? 'status-danger' : 'status-safe'}`}>
+                  {result.googleSafeBrowsing?.flagged ? '✗ Terdeteksi berbahaya' : '✓ Tidak terdeteksi ancaman'}
+                </span>
+              </div>
+              <div className="detail-row">
                 <span className="detail-label">Waktu pemeriksaan</span>
                 <span className="detail-value">
                   {new Date(result.checkedAt).toLocaleString('id-ID', { dateStyle: 'long', timeStyle: 'short' })} WIB
                 </span>
               </div>
-              <div className="detail-row">
-                <span className="detail-label">Diperiksa oleh</span>
-                <span className="detail-value">VirusTotal + Google Safe Browsing</span>
-              </div>
+              {vt?.permalink && (
+                <div className="detail-row">
+                  <span className="detail-label">Lihat di VirusTotal</span>
+                  <span className="detail-value">
+                    <a href={vt.permalink} target="_blank" rel="noopener noreferrer" className="cl-vt-link">
+                      Buka laporan lengkap →
+                    </a>
+                  </span>
+                </div>
+              )}
             </div>
-          </div>
-
-          <div className="trust-bar" style={{ marginTop: 20, padding: 0 }}>
-            <span className="trust-pill">🔍 VirusTotal</span>
-            <span className="trust-pill">🛡️ Google Safe Browsing</span>
           </div>
         </div>
       </>

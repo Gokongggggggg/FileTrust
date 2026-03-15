@@ -41,9 +41,9 @@ async function checkVirusTotal(url) {
   const analysisId = submitRes.data?.data?.id;
   if (!analysisId) return { malicious: false, stats: {}, permalink: null };
 
-  // Poll for result (max 3 tries, 2s apart)
-  for (let i = 0; i < 3; i++) {
-    await new Promise(r => setTimeout(r, 2000));
+  // Poll for result (max 8 tries, 3s apart — VT can be slow)
+  for (let i = 0; i < 8; i++) {
+    await new Promise(r => setTimeout(r, 3000));
     const result = await axios.get(`${VT_API}/analyses/${analysisId}`, {
       headers: { 'x-apikey': apiKey },
     });
@@ -51,15 +51,27 @@ async function checkVirusTotal(url) {
     const status = result.data?.data?.attributes?.status;
     if (status === 'completed') {
       const stats = result.data?.data?.attributes?.stats || {};
+      const results = result.data?.data?.attributes?.results || {};
+
+      // Collect which engines flagged it
+      const detections = [];
+      for (const [engine, info] of Object.entries(results)) {
+        if (info.category === 'malicious' || info.category === 'suspicious') {
+          detections.push({ engine, category: info.category, result: info.result });
+        }
+      }
+
       return {
         malicious: (stats.malicious || 0) > 0 || (stats.suspicious || 0) > 0,
         stats,
+        detections,
+        totalEngines: Object.keys(results).length,
         permalink: `https://www.virustotal.com/gui/url/${analysisId.split('-')[1]}`,
       };
     }
   }
 
-  return { malicious: false, stats: {}, permalink: null };
+  return { malicious: false, stats: {}, detections: [], totalEngines: 0, permalink: null };
 }
 
 /**
@@ -97,30 +109,41 @@ async function checkURL(url) {
 
   let malicious = false;
   let reason = null;
+  let vtData = null;
+  let gsbFlagged = false;
 
   try {
     const vtResult = await checkVirusTotal(finalUrl);
+    vtData = {
+      stats: vtResult.stats,
+      detections: vtResult.detections || [],
+      totalEngines: vtResult.totalEngines || 0,
+      permalink: vtResult.permalink,
+    };
     if (vtResult.malicious) {
       malicious = true;
-      reason = `terdeteksi oleh VirusTotal (${vtResult.stats.malicious || 0} engine)`;
+      reason = `terdeteksi oleh VirusTotal (${vtResult.stats.malicious || 0} malicious, ${vtResult.stats.suspicious || 0} suspicious)`;
     }
   } catch (e) {
-    // VT failed, continue to GSB
+    console.error('[URLChecker] VirusTotal error:', e.message);
   }
 
-  if (!malicious) {
-    try {
-      const flagged = await checkGoogleSafeBrowsing([finalUrl]);
-      if (flagged.length > 0) {
+  try {
+    const flagged = await checkGoogleSafeBrowsing([finalUrl]);
+    if (flagged.length > 0) {
+      gsbFlagged = true;
+      if (!malicious) {
         malicious = true;
         reason = 'terdeteksi oleh Google Safe Browsing';
+      } else {
+        reason += ' + Google Safe Browsing';
       }
-    } catch {
-      // GSB failed, skip
     }
+  } catch (e) {
+    console.error('[URLChecker] Google Safe Browsing error:', e.message);
   }
 
-  return { url, finalUrl, shortened, malicious, reason };
+  return { url, finalUrl, shortened, malicious, reason, vtData, gsbFlagged };
 }
 
 module.exports = { checkURL, unshortenURL, checkVirusTotal, checkGoogleSafeBrowsing };

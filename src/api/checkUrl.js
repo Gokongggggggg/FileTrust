@@ -28,6 +28,8 @@ router.post('/', async (req, res) => {
       isSafe: !result.malicious,
       reason: result.reason,
       checkedAt: new Date().toISOString(),
+      virusTotal: result.vtData,
+      googleSafeBrowsing: { flagged: result.gsbFlagged },
     });
   } catch (err) {
     console.error('[CheckURL] Error:', err.message);
