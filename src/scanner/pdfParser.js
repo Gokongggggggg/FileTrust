@@ -1,5 +1,3 @@
-const { PDFParse } = require('pdf-parse');
-
 // Regex to extract URLs from text
 const URL_REGEX = /https?:\/\/[^\s\)>\]"']+/gi;
 
@@ -20,9 +18,19 @@ const JS_PATTERNS = [
  * @returns {{ urls: string[], hasEmbeddedJS: boolean, jsDetails: string[] }}
  */
 async function parsePDF(buffer) {
-  const parser = new PDFParse({ data: buffer });
-  const data = await parser.getText();
-  const text = data.text || '';
+  let text = '';
+
+  // Try pdf-parse v2 API first, fall back to raw text extraction
+  try {
+    const { PDFParse } = require('pdf-parse');
+    const parser = new PDFParse({ data: buffer });
+    const data = await parser.getText();
+    text = data.text || '';
+  } catch (err) {
+    console.warn('[PDFParser] pdf-parse failed, falling back to raw extraction:', err.message);
+    // Fallback: extract text from raw buffer (catches most URLs)
+    text = buffer.toString('latin1');
+  }
 
   // Extract URLs from text content
   const urls = [...new Set((text.match(URL_REGEX) || []).map(u => u.replace(/[.,;)>\]]+$/, '')))];

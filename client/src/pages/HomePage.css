@@ -258,6 +258,110 @@
 .tool-cta svg { width: 14px; height: 14px; }
 
 /* ═══════════════════════════════════════════
+   CODE CHECK
+   ═══════════════════════════════════════════ */
+.code-check-card {
+  margin-top: 16px;
+  background: #fff;
+  border: 1px solid var(--slate-200);
+  border-radius: 22px;
+  padding: 36px 32px;
+  text-align: center;
+}
+
+.code-check-icon {
+  width: 60px; height: 60px;
+  border-radius: 18px;
+  background: linear-gradient(135deg, var(--green-600), var(--green-500));
+  box-shadow: 0 4px 14px rgba(22,163,74,0.3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 20px;
+  color: #fff;
+}
+
+.code-check-card h3 {
+  font-size: 20px;
+  font-weight: 800;
+  color: var(--slate-800);
+  margin-bottom: 8px;
+  letter-spacing: -0.3px;
+}
+
+.code-check-card p {
+  font-size: 14px;
+  color: var(--slate-500);
+  line-height: 1.6;
+  max-width: 420px;
+  margin: 0 auto 24px;
+}
+
+.code-check-form {
+  display: flex;
+  gap: 10px;
+  max-width: 420px;
+  margin: 0 auto;
+}
+
+.code-check-input {
+  flex: 1;
+  padding: 14px 18px;
+  font-size: 16px;
+  font-family: 'JetBrains Mono', 'Inter', monospace;
+  font-weight: 700;
+  letter-spacing: 2px;
+  color: var(--slate-800);
+  background: var(--slate-50);
+  border: 2px solid var(--slate-200);
+  border-radius: 14px;
+  text-align: center;
+  text-transform: uppercase;
+  outline: none;
+  transition: all 0.2s;
+}
+
+.code-check-input:focus {
+  border-color: var(--green-500);
+  background: #fff;
+  box-shadow: 0 0 0 4px rgba(34,197,94,0.1);
+}
+
+.code-check-input::placeholder {
+  color: var(--slate-400);
+  font-weight: 500;
+  letter-spacing: 1px;
+}
+
+.code-check-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 14px 24px;
+  background: linear-gradient(135deg, var(--green-600), var(--green-500));
+  color: #fff;
+  border: none;
+  border-radius: 14px;
+  font-size: 15px;
+  font-weight: 700;
+  font-family: 'Inter', sans-serif;
+  cursor: pointer;
+  transition: all 0.2s;
+  white-space: nowrap;
+  box-shadow: 0 4px 12px rgba(22,163,74,0.3);
+}
+
+.code-check-btn:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(22,163,74,0.35);
+}
+
+.code-check-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* ═══════════════════════════════════════════
    TRUST BAR
    ═══════════════════════════════════════════ */
 .trust-bar {
@@ -580,6 +684,8 @@
   .tools-wrap, .trust-bar, .how-section,
   .features-section, .faq-section, .cta-section { padding: 0 16px; }
   .tool-grid, .feature-grid { grid-template-columns: 1fr; }
+  .code-check-form { flex-direction: column; }
+  .code-check-card { padding: 28px 20px; }
   .steps { flex-direction: column; }
   .step-arrow { display: none; }
   .cta-banner { padding: 36px 24px; }

@@ -289,6 +289,33 @@ export default function HomePage() {
             </span>
           </a>
         </div>
+
+        {/* Code Check */}
+        <div className="code-check-card">
+          <div className="code-check-icon">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+              <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+              <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+            </svg>
+          </div>
+          <h3>Punya Kode Verifikasi?</h3>
+          <p>Masukkan kode 8 karakter dari pengirim file untuk lihat hasil scan dan download.</p>
+          <div className="code-check-form">
+            <input
+              type="text"
+              className="code-check-input"
+              placeholder="Contoh: ABCD-1234"
+              value={checkCode}
+              onChange={e => setCheckCode(e.target.value.toUpperCase())}
+              onKeyDown={e => e.key === 'Enter' && goCheck()}
+              maxLength={9}
+            />
+            <button className="code-check-btn" onClick={goCheck} disabled={!checkCode.trim()}>
+              Cek Hasil
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+            </button>
+          </div>
+        </div>
       </div>
 
       {/* Trust Bar */}
